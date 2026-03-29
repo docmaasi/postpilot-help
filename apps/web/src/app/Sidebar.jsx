@@ -18,6 +18,7 @@ import {
   Rocket,
   Users,
   Gift,
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '@postpilot/lib';
 
@@ -52,6 +53,7 @@ const NAV_SECTIONS = [
     label: 'Settings',
     items: [
       { to: '/app/connections', icon: Link2, label: 'Connections' },
+      { to: '/app/pricing', icon: Sparkles, label: 'Pricing' },
       { to: '/app/billing', icon: CreditCard, label: 'Billing' },
       { to: '/app/referrals', icon: Gift, label: 'Referrals' },
       { to: '/app/settings', icon: Settings, label: 'Settings' },

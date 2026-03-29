@@ -39,9 +39,13 @@ export function HeroSection() {
           >
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display leading-[1.1]">
-              Turn One Video Into{' '}
+              Your Videos.{' '}
               <span className="bg-gradient-to-r from-violet-600 via-pink-500 to-orange-400 bg-clip-text text-transparent">
-                Posts Everywhere
+                Every Platform.
+              </span>
+              <br />
+              <span className="text-3xl sm:text-4xl lg:text-5xl text-foreground/80">
+                All From One Dashboard.
               </span>
             </h1>
 

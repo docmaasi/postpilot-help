@@ -76,6 +76,7 @@ export function App() {
             <Route path="referrals" element={<Referrals />} />
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="pricing" element={<Pricing />} />
           </Route>
         </Routes>
       </Suspense>
