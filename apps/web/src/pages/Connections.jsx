@@ -1,52 +1,48 @@
-import { Link2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { PlatformCard } from '../components/connections/PlatformCard.jsx';
+import { BenefitsSection } from '../components/connections/BenefitsSection.jsx';
 
 const PLATFORMS = [
-  { name: 'YouTube', color: '#FF0000', status: 'not_connected' },
-  { name: 'X / Twitter', color: '#1DA1F2', status: 'not_connected' },
-  { name: 'Instagram', color: '#E4405F', status: 'not_connected' },
-  { name: 'Facebook', color: '#1877F2', status: 'not_connected' },
-  { name: 'LinkedIn', color: '#0A66C2', status: 'not_connected' },
-  { name: 'TikTok', color: '#000000', status: 'not_connected' },
-  { name: 'Threads', color: '#000000', status: 'not_connected' },
+  { key: 'youtube_community', name: 'YouTube', color: '#FF0000', status: 'not_connected', description: 'Publish community posts and track video engagement.' },
+  { key: 'twitter', name: 'X / Twitter', color: '#1DA1F2', status: 'not_connected', description: 'Share tweets and threads, track replies and mentions.' },
+  { key: 'instagram', name: 'Instagram', color: '#E4405F', status: 'not_connected', description: 'Post reels, stories, and carousels with scheduling.' },
+  { key: 'facebook', name: 'Facebook', color: '#1877F2', status: 'not_connected', description: 'Publish to pages and groups, monitor comments.' },
+  { key: 'linkedin', name: 'LinkedIn', color: '#0A66C2', status: 'not_connected', description: 'Share professional content and articles.' },
+  { key: 'tiktok', name: 'TikTok', color: '#010101', status: 'not_connected', description: 'Upload short-form videos and track views.' },
+  { key: 'threads', name: 'Threads', color: '#010101', status: 'not_connected', description: 'Post threads and engage with your audience.' },
 ];
 
 export default function Connections() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Platform Connections</h1>
-        <p className="text-sm text-muted-foreground">
-          Connect your social media accounts for direct publishing
-        </p>
-      </div>
+  function handleConnect(key) {
+    // Placeholder — platform OAuth not yet wired
+    window.alert(`${key} connection coming soon!`);
+  }
 
+  return (
+    <div className="mx-auto max-w-5xl space-y-8">
+      {/* Hero */}
+      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
+        <h1 className="text-3xl font-bold">
+          <span className="gradient-text">Connect Your Platforms</span>
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Link your social accounts to publish, track analytics, and monitor comments.
+        </p>
+      </motion.div>
+
+      {/* Platform grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {PLATFORMS.map((platform) => (
-          <div
-            key={platform.name}
-            className="rounded-xl border border-border bg-card p-5 shadow-subtle"
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-lg"
-                style={{ backgroundColor: platform.color + '15' }}
-              >
-                <Link2
-                  className="h-5 w-5"
-                  style={{ color: platform.color }}
-                />
-              </div>
-              <div>
-                <h3 className="font-semibold">{platform.name}</h3>
-                <p className="text-xs text-muted-foreground">Not connected</p>
-              </div>
-            </div>
-            <button className="mt-4 w-full rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">
-              Connect
-            </button>
-          </div>
+        {PLATFORMS.map((p, i) => (
+          <PlatformCard
+            key={p.key}
+            platform={p}
+            index={i}
+            onConnect={handleConnect}
+          />
         ))}
       </div>
+
+      <BenefitsSection />
     </div>
   );
 }

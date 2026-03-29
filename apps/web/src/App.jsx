@@ -23,6 +23,12 @@ const Circles = React.lazy(() => import('./pages/Circles.jsx'));
 const Referrals = React.lazy(() => import('./pages/Referrals.jsx'));
 const Settings = React.lazy(() => import('./pages/Settings.jsx'));
 const Pricing = React.lazy(() => import('./pages/Pricing.jsx'));
+const Terms = React.lazy(() => import('./pages/legal/Terms.jsx'));
+const Privacy = React.lazy(() => import('./pages/legal/Privacy.jsx'));
+const Cookies = React.lazy(() => import('./pages/legal/Cookies.jsx'));
+const Contact = React.lazy(() => import('./pages/legal/Contact.jsx'));
+const Blog = React.lazy(() => import('./pages/Blog.jsx'));
+const BlogPost = React.lazy(() => import('./pages/BlogPost.jsx'));
 
 export function App() {
   return (
@@ -51,6 +57,12 @@ export function App() {
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/cookies" element={<Cookies />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
             </Route>
           </Routes>
         </SignedIn>

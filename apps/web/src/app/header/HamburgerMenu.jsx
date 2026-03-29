@@ -1,0 +1,99 @@
+import { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  LayoutDashboard, Youtube, PenSquare, CalendarDays, Image,
+  Copy, Megaphone, Users, BarChart3, MessageCircle, TrendingUp,
+  Link2, Sparkles, CreditCard, Gift, Settings,
+} from 'lucide-react';
+
+const MENU_SECTIONS = [
+  {
+    title: 'Content',
+    items: [
+      { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+      { to: '/videos', icon: Youtube, label: 'Videos' },
+      { to: '/posts', icon: PenSquare, label: 'Posts' },
+      { to: '/calendar', icon: CalendarDays, label: 'Calendar' },
+      { to: '/media', icon: Image, label: 'Media' },
+    ],
+  },
+  {
+    title: 'Organize',
+    items: [
+      { to: '/templates', icon: Copy, label: 'Templates' },
+      { to: '/campaigns', icon: Megaphone, label: 'Campaigns' },
+      { to: '/circles', icon: Users, label: 'Circles' },
+    ],
+  },
+  {
+    title: 'Insights',
+    items: [
+      { to: '/analytics', icon: BarChart3, label: 'Analytics' },
+      { to: '/comments', icon: MessageCircle, label: 'Comments' },
+      { to: '/trending', icon: TrendingUp, label: 'Trending' },
+    ],
+  },
+  {
+    title: 'Account',
+    items: [
+      { to: '/connections', icon: Link2, label: 'Connections' },
+      { to: '/pricing', icon: Sparkles, label: 'Pricing' },
+      { to: '/billing', icon: CreditCard, label: 'Billing' },
+      { to: '/referrals', icon: Gift, label: 'Referrals' },
+      { to: '/settings', icon: Settings, label: 'Settings' },
+    ],
+  },
+];
+
+export function HamburgerMenu({ onClose }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) onClose();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className="absolute left-0 right-0 top-full z-50 mx-4 mt-1 overflow-hidden rounded-xl border border-border bg-card shadow-lg sm:left-auto sm:right-0 sm:mx-0 sm:w-[480px]"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.18 }}
+    >
+      {/* Logo header */}
+      <div className="flex items-center gap-2.5 border-b border-border px-5 py-3">
+        <img src="/logo.png" alt="PostPilot" className="h-7 w-auto" />
+      </div>
+
+      {/* Menu grid */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-5 p-5">
+        {MENU_SECTIONS.map((section) => (
+          <div key={section.title}>
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              {section.title}
+            </p>
+            <div className="flex flex-col gap-0.5">
+              {section.items.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={onClose}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <item.icon className="h-4 w-4 text-primary/60" />
+                  <span>{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}

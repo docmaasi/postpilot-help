@@ -1,11 +1,14 @@
-import { Menu, Search, Moon, Sun } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, Search, Moon, Sun, LayoutGrid } from 'lucide-react';
+import { useState, useCallback } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { UserButton } from '@clerk/clerk-react';
+import { HamburgerMenu } from './header/HamburgerMenu.jsx';
 
 export function AppHeader({ onMenuClick }) {
   const [darkMode, setDarkMode] = useState(
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
   );
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
@@ -14,14 +17,25 @@ export function AppHeader({ onMenuClick }) {
     localStorage.setItem('theme', next ? 'dark' : 'light');
   };
 
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
   return (
-    <header className="flex h-14 items-center gap-4 border-b border-border bg-card px-4">
+    <header className="relative flex h-14 items-center gap-4 border-b border-border bg-card px-4">
       {/* Mobile menu button */}
       <button
         className="rounded-lg p-2 hover:bg-muted md:hidden"
         onClick={onMenuClick}
       >
         <Menu className="h-5 w-5" />
+      </button>
+
+      {/* Hamburger grid menu */}
+      <button
+        className="rounded-lg p-2 hover:bg-muted"
+        onClick={() => setMenuOpen((v) => !v)}
+        title="Quick navigation"
+      >
+        <LayoutGrid className="h-5 w-5 text-muted-foreground" />
       </button>
 
       {/* Search */}
@@ -43,16 +57,15 @@ export function AppHeader({ onMenuClick }) {
           onClick={toggleDarkMode}
           title={darkMode ? 'Light mode' : 'Dark mode'}
         >
-          {darkMode ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
+          {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </button>
-
-        {/* Clerk UserButton — handles avatar, profile, sign out */}
         <UserButton afterSignOutUrl="/" />
       </div>
+
+      {/* Dropdown menu */}
+      <AnimatePresence>
+        {menuOpen && <HamburgerMenu onClose={closeMenu} />}
+      </AnimatePresence>
     </header>
   );
 }

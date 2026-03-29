@@ -68,13 +68,12 @@ export function Sidebar({ isOpen, onToggle, isMobile = false }) {
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       {/* Logo */}
       <div className="flex h-14 items-center gap-3 border-b border-sidebar-border px-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
-          <Rocket className="h-4 w-4 text-sidebar-primary-foreground" />
-        </div>
-        {isOpen && (
-          <span className="text-lg font-bold tracking-tight">
-            Post<span className="text-sidebar-primary">Pilot</span>
-          </span>
+        {isOpen ? (
+          <img src="/logo.png" alt="PostPilot" className="h-8 w-auto" />
+        ) : (
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
+            <Rocket className="h-4 w-4 text-sidebar-primary-foreground" />
+          </div>
         )}
       </div>
 

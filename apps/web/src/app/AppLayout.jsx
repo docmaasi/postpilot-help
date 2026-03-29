@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AppHeader } from './AppHeader.jsx';
 import { Sidebar } from './Sidebar.jsx';
+import { Footer } from './Footer.jsx';
 
 export function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -53,8 +54,11 @@ export function AppLayout() {
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         <AppHeader onMenuClick={() => setMobileSidebarOpen(true)} />
-        <main className="flex-1 overflow-auto p-6">
-          <Outlet />
+        <main className="flex-1 overflow-auto">
+          <div className="p-6">
+            <Outlet />
+          </div>
+          <Footer />
         </main>
       </div>
     </div>
