@@ -11,7 +11,16 @@ import { CTASection } from '../components/landing/CTASection.jsx';
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div
+      className="min-h-screen text-foreground overflow-x-hidden"
+      style={{
+        backgroundImage: 'url(/landing-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundRepeat: 'repeat-y',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       <LandingNav />
       <HeroSection />
       <SocialMediaStats />
