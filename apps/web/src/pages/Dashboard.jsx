@@ -6,6 +6,8 @@ import { RecentVideos } from '../components/dashboard/RecentVideos.jsx';
 import { UpcomingPosts } from '../components/dashboard/UpcomingPosts.jsx';
 import { DraftPosts } from '../components/dashboard/DraftPosts.jsx';
 import { PlatformStatus } from '../components/dashboard/PlatformStatus.jsx';
+import { FloatingSocialBg } from '../components/shared/FloatingSocialBg.jsx';
+import { ShareButton } from '../components/shared/ShareButton.jsx';
 
 export default function Dashboard() {
   const user = useCurrentUser();
@@ -27,21 +29,28 @@ export default function Dashboard() {
   const displayName = user?.displayName?.split(' ')[0] || 'Creator';
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="relative mx-auto max-w-6xl space-y-6">
+      {/* Subtle floating social icons behind content */}
+      <FloatingSocialBg density="light" />
+
       {/* Welcome header with gradient */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
+        className="flex items-start justify-between"
       >
-        <h1 className="text-3xl font-bold">
-          {greeting},{' '}
-          <span className="bg-gradient-to-r from-violet-500 via-pink-500 to-orange-400 bg-clip-text text-transparent">
-            {displayName}
-          </span>
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Here is what is happening with your content today.
-        </p>
+        <div>
+          <h1 className="text-3xl font-bold">
+            {greeting},{' '}
+            <span className="bg-gradient-to-r from-violet-500 via-pink-500 to-orange-400 bg-clip-text text-transparent">
+              {displayName}
+            </span>
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Here is what is happening with your content today.
+          </p>
+        </div>
+        <ShareButton title="My PostPilot Dashboard" />
       </motion.div>
 
       {/* Stats cards */}

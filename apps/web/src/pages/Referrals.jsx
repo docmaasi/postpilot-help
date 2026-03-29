@@ -4,6 +4,7 @@ import { Gift, Copy, Check, Twitter, Mail, Share2, Shield } from 'lucide-react';
 import { ReferralHistory } from '../components/referrals/ReferralHistory.jsx';
 import { HowItWorks } from '../components/referrals/HowItWorks.jsx';
 import { RewardBreakdown } from '../components/referrals/RewardBreakdown.jsx';
+import { ShareButton } from '../components/shared/ShareButton.jsx';
 
 const REFERRAL_CODE = 'PILOT-A3X9';
 const REFERRAL_LINK = 'https://postpilot.help/r/PILOT-A3X9';
@@ -47,6 +48,13 @@ export default function Referrals() {
         <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
           Share your referral code with friends. When they join, you both earn bonus credits.
         </p>
+        <div className="mt-4 flex justify-center">
+          <ShareButton
+            url={REFERRAL_LINK}
+            title="Join PostPilot with my referral link and get bonus credits!"
+            description={`Sign up for PostPilot using my referral link and we both get bonus credits: ${REFERRAL_LINK}`}
+          />
+        </div>
       </motion.div>
 
       {/* Code + Share */}

@@ -1,10 +1,11 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
 import { AppLayout } from './app/AppLayout.jsx';
 import { PageSkeleton } from './app/PageSkeleton.jsx';
 
 // Lazy-loaded pages
+const Landing = React.lazy(() => import('./pages/Landing.jsx'));
 const Dashboard = React.lazy(() => import('./pages/Dashboard.jsx'));
 const Videos = React.lazy(() => import('./pages/Videos.jsx'));
 const VideoDetail = React.lazy(() => import('./pages/VideoDetail.jsx'));
@@ -29,46 +30,66 @@ const Cookies = React.lazy(() => import('./pages/legal/Cookies.jsx'));
 const Contact = React.lazy(() => import('./pages/legal/Contact.jsx'));
 const Blog = React.lazy(() => import('./pages/Blog.jsx'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost.jsx'));
+const Platforms = React.lazy(() => import('./pages/Platforms.jsx'));
+
+/** Public routes that bypass auth (no sidebar/header, no sign-in required) */
+const PUBLIC_PATHS = ['/landing'];
+
+function AuthGate({ children }) {
+  const { pathname } = useLocation();
+  const isPublic = PUBLIC_PATHS.includes(pathname);
+  if (isPublic) return null;
+  return children;
+}
 
 export function App() {
   return (
     <BrowserRouter>
       <Suspense fallback={<PageSkeleton />}>
-        <SignedIn>
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/videos" element={<Videos />} />
-              <Route path="/videos/:id" element={<VideoDetail />} />
-              <Route path="/posts" element={<Posts />} />
-              <Route path="/posts/new" element={<PostEditor />} />
-              <Route path="/posts/:id" element={<PostEditor />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/media" element={<MediaLibrary />} />
-              <Route path="/templates" element={<Templates />} />
-              <Route path="/campaigns" element={<Campaigns />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/analytics/:id" element={<Analytics />} />
-              <Route path="/comments" element={<Comments />} />
-              <Route path="/trending" element={<Trending />} />
-              <Route path="/connections" element={<Connections />} />
-              <Route path="/circles" element={<Circles />} />
-              <Route path="/referrals" element={<Referrals />} />
-              <Route path="/billing" element={<Billing />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/pricing" element={<Pricing />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/cookies" element={<Cookies />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:id" element={<BlogPost />} />
-            </Route>
-          </Routes>
-        </SignedIn>
-        <SignedOut>
-          <RedirectToSignIn />
-        </SignedOut>
+        {/* Public routes — no auth required, no app layout */}
+        <Routes>
+          <Route path="/landing" element={<Landing />} />
+        </Routes>
+
+        {/* Authenticated app routes */}
+        <AuthGate>
+          <SignedIn>
+            <Routes>
+              <Route element={<AppLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/videos" element={<Videos />} />
+                <Route path="/videos/:id" element={<VideoDetail />} />
+                <Route path="/posts" element={<Posts />} />
+                <Route path="/posts/new" element={<PostEditor />} />
+                <Route path="/posts/:id" element={<PostEditor />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/media" element={<MediaLibrary />} />
+                <Route path="/templates" element={<Templates />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/analytics/:id" element={<Analytics />} />
+                <Route path="/comments" element={<Comments />} />
+                <Route path="/trending" element={<Trending />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="/circles" element={<Circles />} />
+                <Route path="/referrals" element={<Referrals />} />
+                <Route path="/billing" element={<Billing />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/cookies" element={<Cookies />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogPost />} />
+                <Route path="/platforms" element={<Platforms />} />
+              </Route>
+            </Routes>
+          </SignedIn>
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
+        </AuthGate>
       </Suspense>
     </BrowserRouter>
   );

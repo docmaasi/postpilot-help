@@ -1,6 +1,7 @@
 import { PenSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPlatform } from '../../lib/platforms.js';
+import { PostCardIcon } from '../shared/SocialIcons.jsx';
 
 /**
  * Widget showing the 3 most recent draft posts.
@@ -20,7 +21,10 @@ export function DraftPosts({ posts }) {
       </div>
 
       {drafts.length === 0 ? (
-        <div className="flex h-28 flex-col items-center justify-center text-muted-foreground">
+        <div className="relative flex h-28 flex-col items-center justify-center text-muted-foreground">
+          <div className="absolute right-4 top-3 opacity-[0.06]">
+            <PostCardIcon size={48} color="hsl(265 65% 55%)" />
+          </div>
           <PenSquare className="mb-2 h-8 w-8 opacity-30" />
           <p className="text-sm">No drafts yet</p>
         </div>

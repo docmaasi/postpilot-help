@@ -224,3 +224,27 @@
     placeholder:text-muted-foreground/50
     focus:border-primary focus:ring-1 focus:ring-primary/30;
 }
+
+/* Floating social background animations */
+.float-slow {
+  animation: float-slow 18s ease-in-out infinite;
+}
+.float-medium {
+  animation: float-medium 14s ease-in-out infinite;
+}
+.float-fast {
+  animation: float-fast 10s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-2deg); }
+}
+@keyframes float-fast {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}

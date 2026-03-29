@@ -1,6 +1,7 @@
 import { Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getYouTubeThumbnail } from '../../lib/youtube.js';
+import { VideoThumbnailMock } from '../shared/VideoThumbnailMock.jsx';
 
 /**
  * Widget showing the 5 most recently imported YouTube videos.
@@ -18,7 +19,10 @@ export function RecentVideos({ videos }) {
       </div>
 
       {recent.length === 0 ? (
-        <div className="flex h-28 flex-col items-center justify-center text-muted-foreground">
+        <div className="relative flex h-36 flex-col items-center justify-center text-muted-foreground">
+          <div className="absolute inset-x-4 top-2 opacity-[0.05]">
+            <VideoThumbnailMock title="Your first video" duration="0:00" views="Import to get started" />
+          </div>
           <Youtube className="mb-2 h-8 w-8 opacity-30" />
           <p className="text-sm">No videos imported yet</p>
         </div>

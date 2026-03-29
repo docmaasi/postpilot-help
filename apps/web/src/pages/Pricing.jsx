@@ -3,6 +3,7 @@ import { Sparkles } from 'lucide-react';
 import { PlanCards } from '../components/pricing/PlanCard.jsx';
 import { PackCards } from '../components/pricing/PackCard.jsx';
 import { CirclesExplainer } from '../components/pricing/CirclesExplainer.jsx';
+import { ShareButton } from '../components/shared/ShareButton.jsx';
 
 export default function Pricing() {
   return (
@@ -26,6 +27,12 @@ export default function Pricing() {
           Start free. Upgrade when you&apos;re ready to unlock more power,
           more accounts, and team collaboration.
         </p>
+        <div className="mt-4 flex justify-center">
+          <ShareButton
+            title="PostPilot Pricing — Simple, transparent pricing"
+            description="Check out PostPilot's pricing plans. Start free and upgrade when you're ready."
+          />
+        </div>
       </motion.div>
 
       {/* Plan cards */}

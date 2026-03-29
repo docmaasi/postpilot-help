@@ -5,6 +5,7 @@ import { format, addMonths, subMonths, isSameDay } from 'date-fns';
 import { usePosts } from '@postpilot/lib';
 import { CalendarGrid } from '../components/calendar/CalendarGrid.jsx';
 import { DayDetail } from '../components/calendar/DayDetail.jsx';
+import { PostCardIcon, StoryCircleIcon, VideoFrameIcon } from '../components/shared/SocialIcons.jsx';
 
 export default function Calendar() {
   const posts = usePosts();
@@ -89,10 +90,25 @@ export default function Calendar() {
   );
 }
 
-/** Placeholder when no day is selected */
+/** Placeholder when no day is selected — shows faded social post pills */
 function EmptyDetailHint() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border/50 p-8 text-center">
+    <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-border/50 p-8 text-center">
+      {/* Faded social post pill icons */}
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-3 opacity-[0.05]" aria-hidden="true">
+        <div className="flex items-center gap-2 rounded-lg bg-primary/20 px-4 py-2">
+          <PostCardIcon size={18} color="hsl(265 65% 55%)" />
+          <div className="h-2 w-24 rounded bg-primary/40" />
+        </div>
+        <div className="flex items-center gap-2 rounded-lg bg-accent/20 px-4 py-2">
+          <VideoFrameIcon size={18} color="hsl(330 80% 60%)" />
+          <div className="h-2 w-20 rounded bg-accent/40" />
+        </div>
+        <div className="flex items-center gap-2 rounded-lg bg-primary/20 px-4 py-2">
+          <StoryCircleIcon size={18} color="hsl(265 65% 55%)" />
+          <div className="h-2 w-16 rounded bg-primary/40" />
+        </div>
+      </div>
       <Sparkles className="mb-3 h-8 w-8 text-primary/30" />
       <p className="text-sm font-medium text-muted-foreground">
         Select a day to see scheduled posts

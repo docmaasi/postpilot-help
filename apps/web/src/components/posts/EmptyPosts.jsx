@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { PenSquare, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { FloatingSocialBg } from '../shared/FloatingSocialBg.jsx';
 
 const MESSAGES = {
   all: { title: 'No posts yet', desc: 'Create your first post or import a video to repurpose.' },
@@ -18,8 +19,10 @@ export function EmptyPosts({ activeTab }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/50 py-16"
+      className="relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border border-dashed border-border bg-card/50 py-16"
     >
+      {/* Faded floating social post cards in background */}
+      <FloatingSocialBg density="medium" />
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl stat-gradient-violet">
         {activeTab === 'failed' ? (
           <Sparkles className="h-8 w-8 text-green-500" />
