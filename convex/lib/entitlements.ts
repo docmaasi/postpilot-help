@@ -1,13 +1,9 @@
 /**
  * Central entitlement calculator.
- *
- * Combines plan limits + pack bonuses to determine
- * what a user is allowed to do and how much they have left.
+ * Combines plan limits + pack bonuses to determine what a user can do.
  */
 
 import { PLANS, type PlanId } from "./plans";
-
-// ── Types ────────────────────────────────────────────
 
 export interface PackBalances {
   aiRewrites: number;
@@ -20,53 +16,67 @@ export interface PackBalances {
 export interface UsageCounters {
   scheduledPostsUsed: number;
   aiRewritesUsed: number;
+  youtubeImportsUsed: number;
 }
 
 export interface Entitlements {
+  /* Counts */
   maxSocialAccounts: number;
   maxScheduledPosts: number;
   maxAiRewrites: number;
   maxCircleSlots: number;
   maxYoutubeImports: number;
+  aiTones: number;
+  competitorTrackingSlots: number;
   remainingScheduledPosts: number;
   remainingAiRewrites: number;
+  remainingYoutubeImports: number;
+  /* Free plan flags */
   hasWatermark: boolean;
+  /* Creator+ features */
   hasTemplates: boolean;
+  /* Pro-only features */
   hasBulkSchedule: boolean;
   hasAdvancedAI: boolean;
   hasAnalytics: boolean;
   hasPriorityProcessing: boolean;
+  hasAutoPublish: boolean;
+  hasABTesting: boolean;
+  hasEvergreenRecycling: boolean;
+  hasRSSImport: boolean;
+  hasVideoSummarizer: boolean;
+  hasThreadGenerator: boolean;
+  hasImageCaption: boolean;
+  hasCompetitorTracking: boolean;
+  hasBestTimeAI: boolean;
+  hasContentScoring: boolean;
+  hasWeeklyReport: boolean;
+  hasApprovalWorkflows: boolean;
+  hasTeamActivityLog: boolean;
+  hasClientWorkspaces: boolean;
+  hasCustomBranding: boolean;
+  hasWhiteLabelReports: boolean;
+  hasPrioritySupport: boolean;
+  /* Pack bonuses */
   hasViralTemplates: boolean;
 }
 
-// ── Helpers ──────────────────────────────────────────
-
 const DEFAULT_PACK: PackBalances = {
-  aiRewrites: 0,
-  scheduledPosts: 0,
-  circleSlots: 0,
-  analyticsUnlocked: false,
-  viralTemplatesUnlocked: false,
+  aiRewrites: 0, scheduledPosts: 0, circleSlots: 0,
+  analyticsUnlocked: false, viralTemplatesUnlocked: false,
 };
 
 const DEFAULT_USAGE: UsageCounters = {
-  scheduledPostsUsed: 0,
-  aiRewritesUsed: 0,
+  scheduledPostsUsed: 0, aiRewritesUsed: 0, youtubeImportsUsed: 0,
 };
 
-/** Add bonus on top of a plan limit. -1 means unlimited. */
-function addBonus(planLimit: number, bonus: number): number {
-  if (planLimit === -1) return -1;
-  return planLimit + bonus;
+function addBonus(limit: number, bonus: number): number {
+  return limit === -1 ? -1 : limit + bonus;
 }
 
-/** Subtract usage from a limit. -1 means unlimited. */
 function remaining(limit: number, used: number): number {
-  if (limit === -1) return -1;
-  return Math.max(0, limit - used);
+  return limit === -1 ? -1 : Math.max(0, limit - used);
 }
-
-// ── Main calculator ──────────────────────────────────
 
 export function calculateEntitlements(
   plan: PlanId,
@@ -77,69 +87,60 @@ export function calculateEntitlements(
   const packs = packBalances ?? DEFAULT_PACK;
   const usage = usageCounters ?? DEFAULT_USAGE;
 
-  const maxScheduledPosts = addBonus(
-    p.scheduledPostsPerMonth,
-    packs.scheduledPosts
-  );
-  const maxAiRewrites = addBonus(
-    p.aiRewritesPerMonth,
-    packs.aiRewrites
-  );
-  const maxCircleSlots = p.circleSlots + packs.circleSlots;
+  const maxScheduled = addBonus(p.scheduledPostsPerMonth, packs.scheduledPosts);
+  const maxAi = addBonus(p.aiRewritesPerMonth, packs.aiRewrites);
+  const maxCircle = p.circleSlots + packs.circleSlots;
+  const competitors = typeof p.hasCompetitorTracking === "number"
+    ? p.hasCompetitorTracking : 0;
 
   return {
     maxSocialAccounts: p.socialAccounts,
-    maxScheduledPosts,
-    maxAiRewrites,
-    maxCircleSlots,
+    maxScheduledPosts: maxScheduled,
+    maxAiRewrites: maxAi,
+    maxCircleSlots: maxCircle,
     maxYoutubeImports: p.youtubeImportsPerMonth,
-    remainingScheduledPosts: remaining(
-      maxScheduledPosts,
-      usage.scheduledPostsUsed
-    ),
-    remainingAiRewrites: remaining(
-      maxAiRewrites,
-      usage.aiRewritesUsed
-    ),
+    aiTones: p.aiTones,
+    competitorTrackingSlots: competitors,
+    remainingScheduledPosts: remaining(maxScheduled, usage.scheduledPostsUsed),
+    remainingAiRewrites: remaining(maxAi, usage.aiRewritesUsed),
+    remainingYoutubeImports: remaining(p.youtubeImportsPerMonth, usage.youtubeImportsUsed),
     hasWatermark: p.hasWatermark,
     hasTemplates: p.hasTemplates,
     hasBulkSchedule: p.hasBulkSchedule,
     hasAdvancedAI: p.hasAdvancedAI,
     hasAnalytics: p.hasAnalytics || !!packs.analyticsUnlocked,
     hasPriorityProcessing: p.hasPriorityProcessing,
+    hasAutoPublish: p.hasAutoPublish,
+    hasABTesting: p.hasABTesting,
+    hasEvergreenRecycling: p.hasEvergreenRecycling,
+    hasRSSImport: p.hasRSSImport,
+    hasVideoSummarizer: p.hasVideoSummarizer,
+    hasThreadGenerator: p.hasThreadGenerator,
+    hasImageCaption: p.hasImageCaption,
+    hasCompetitorTracking: competitors > 0,
+    hasBestTimeAI: p.hasBestTimeAI,
+    hasContentScoring: p.hasContentScoring,
+    hasWeeklyReport: p.hasWeeklyReport,
+    hasApprovalWorkflows: p.hasApprovalWorkflows,
+    hasTeamActivityLog: p.hasTeamActivityLog,
+    hasClientWorkspaces: p.hasClientWorkspaces,
+    hasCustomBranding: p.hasCustomBranding,
+    hasWhiteLabelReports: p.hasWhiteLabelReports,
+    hasPrioritySupport: p.hasPrioritySupport,
     hasViralTemplates: !!packs.viralTemplatesUnlocked,
   };
 }
 
-// ── Action checkers ──────────────────────────────────
-
-type BooleanFeature =
-  | "hasTemplates"
-  | "hasBulkSchedule"
-  | "hasAdvancedAI"
-  | "hasAnalytics"
-  | "hasPriorityProcessing"
-  | "hasViralTemplates";
-
-type CountFeature =
-  | "remainingScheduledPosts"
-  | "remainingAiRewrites";
-
+type BooleanFeature = Extract<keyof Entitlements, `has${string}`>;
+type CountFeature = "remainingScheduledPosts" | "remainingAiRewrites" | "remainingYoutubeImports";
 type ActionKey = BooleanFeature | CountFeature;
 
-export function canPerformAction(
-  entitlements: Entitlements,
-  action: ActionKey
-): boolean {
-  const value = entitlements[action];
-  if (typeof value === "boolean") return value;
-  // -1 means unlimited, otherwise must be > 0
-  return value === -1 || value > 0;
+export function canPerformAction(ent: Entitlements, action: ActionKey): boolean {
+  const v = ent[action];
+  if (typeof v === "boolean") return v;
+  return v === -1 || v > 0;
 }
 
-export function getRemainingUsage(
-  entitlements: Entitlements,
-  feature: CountFeature
-): number {
-  return entitlements[feature];
+export function getRemainingUsage(ent: Entitlements, feature: CountFeature): number {
+  return ent[feature];
 }
