@@ -8,12 +8,14 @@ const plans = [
     period: 'forever',
     features: ['3 scheduled posts/week', '2 connected platforms', 'Basic analytics'],
     cta: 'Get Started',
+    ctaLink: '/login',
     highlight: false,
   },
   {
     name: 'Creator',
     price: '$12',
     period: '/mo',
+    badge: 'Most Popular',
     features: [
       'Unlimited scheduled posts',
       '5 connected platforms',
@@ -21,6 +23,7 @@ const plans = [
       'Content calendar',
     ],
     cta: 'Start Free Trial',
+    ctaLink: '/login',
     highlight: true,
   },
   {
@@ -34,6 +37,7 @@ const plans = [
       'Priority support',
     ],
     cta: 'Start Free Trial',
+    ctaLink: '/login',
     highlight: false,
   },
 ];
@@ -45,57 +49,21 @@ const card = {
 
 export function PricingPreview() {
   return (
-    <section id="pricing" className="py-24 px-4 social-bg">
+    <section id="pricing" className="py-24 px-4 section-alt">
       <div className="max-w-5xl mx-auto text-center space-y-12">
-        <h2 className="text-3xl sm:text-4xl font-bold">
+        <h2 className="text-3xl sm:text-4xl font-bold font-display">
           Simple, <span className="gradient-text">Creator-Friendly</span> Pricing
         </h2>
 
         <motion.div
-          className="grid sm:grid-cols-3 gap-6"
+          className="grid sm:grid-cols-3 gap-6 items-start"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-50px' }}
           transition={{ staggerChildren: 0.1 }}
         >
-          {plans.map(({ name, price, period, features, cta, highlight }) => (
-            <motion.div
-              key={name}
-              variants={card}
-              className={`rounded-2xl p-6 space-y-6 text-left ${
-                highlight
-                  ? 'gradient-border glass ring-2 ring-primary/20 scale-[1.03]'
-                  : 'glass'
-              }`}
-            >
-              <div>
-                <h3 className="font-bold text-xl">{name}</h3>
-                <p className="mt-2">
-                  <span className="text-4xl font-extrabold">{price}</span>
-                  <span className="text-muted-foreground text-sm"> {period}</span>
-                </p>
-              </div>
-
-              <ul className="space-y-2">
-                {features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check size={16} className="text-success mt-0.5 shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={highlight ? '/login' : '/pricing'}
-                className={`block text-center py-2.5 rounded-xl font-semibold text-sm transition-colors ${
-                  highlight
-                    ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
-                    : 'border border-border hover:bg-muted/50'
-                }`}
-              >
-                {cta}
-              </a>
-            </motion.div>
+          {plans.map((plan) => (
+            <PlanCard key={plan.name} {...plan} />
           ))}
         </motion.div>
 
@@ -107,5 +75,52 @@ export function PricingPreview() {
         </a>
       </div>
     </section>
+  );
+}
+
+function PlanCard({ name, price, period, badge, features, cta, ctaLink, highlight }) {
+  return (
+    <motion.div
+      variants={card}
+      className={`rounded-2xl p-6 space-y-6 text-left relative ${
+        highlight
+          ? 'border-2 border-primary bg-card shadow-xl scale-[1.03]'
+          : 'border border-border bg-card'
+      }`}
+    >
+      {badge && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1 text-xs font-bold text-white">
+          {badge}
+        </span>
+      )}
+
+      <div>
+        <h3 className="font-bold text-xl font-display">{name}</h3>
+        <p className="mt-2">
+          <span className="text-4xl font-extrabold">{price}</span>
+          <span className="text-muted-foreground text-sm"> {period}</span>
+        </p>
+      </div>
+
+      <ul className="space-y-2">
+        {features.map((f) => (
+          <li key={f} className="flex items-start gap-2 text-sm">
+            <Check className="h-4 w-4 text-success mt-0.5 shrink-0" />
+            <span>{f}</span>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href={ctaLink}
+        className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all ${
+          highlight
+            ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl'
+            : 'border border-border hover:bg-muted/50'
+        }`}
+      >
+        {cta}
+      </a>
+    </motion.div>
   );
 }
