@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, X, Loader2 } from 'lucide-react';
-import { useAction } from 'convex/react';
+import { useAction, useConvexAuth } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import { cn } from '@postpilot/lib';
 
@@ -121,10 +122,28 @@ export function PlanCards() {
 function PlanCard({ plan, index }) {
   const { key, name, price, cta, popular, features, sections } = plan;
   const [loading, setLoading] = useState(false);
-  const createCheckout = useAction(api.payments.stripe.createCheckoutSession);
+  const { isAuthenticated } = useConvexAuth();
+  const navigate = useNavigate();
+
+  let createCheckout = null;
+  try {
+    createCheckout = useAction(api.payments.stripe.createCheckoutSession);
+  } catch {
+    // Action not available when not authenticated — that's fine
+  }
 
   async function handleUpgrade() {
-    if (key === 'free') return;
+    if (key === 'free') {
+      navigate('/login');
+      return;
+    }
+
+    // If not logged in, redirect to login first
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     try {
       const url = await createCheckout({
@@ -135,6 +154,7 @@ function PlanCard({ plan, index }) {
       if (url) window.location.href = url;
     } catch (err) {
       console.error('Checkout error:', err);
+      window.alert('Unable to start checkout. Please try again or log in first.');
       setLoading(false);
     }
   }
@@ -208,7 +228,7 @@ function PlanCard({ plan, index }) {
 
       <button
         onClick={handleUpgrade}
-        disabled={loading || key === 'free'}
+        disabled={loading}
         className={cn(
           'w-full rounded-xl py-3 text-sm font-bold transition-all',
           'disabled:opacity-50 disabled:cursor-not-allowed',
