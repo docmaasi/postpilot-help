@@ -1,0 +1,40 @@
+{
+  "name": "postpilot.help",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter=@postpilot/web",
+    "dev:marketing": "turbo dev --filter=@postpilot/marketing",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "turbo clean && rm -rf node_modules",
+    "convex:deploy": "convex deploy",
+    "convex:dev": "convex dev",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^25.0.10",
+    "convex": "^1.25.0",
+    "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "turbo": "^2.3.3",
+    "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": "eslint --fix"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "extends": "../config/tsconfig.react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@postpilot/lib": ["../lib/src/index.js"],
+      "@postpilot/lib/*": ["../lib/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
