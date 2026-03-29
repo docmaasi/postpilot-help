@@ -2,12 +2,13 @@
   "extends": "../../packages/config/tsconfig.react.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "allowJs": true,
+    "checkJs": false,
     "paths": {
       "@/*": ["./src/*"],
-      "@ui/*": ["../../packages/ui/src/*"],
-      "convex/_generated/*": ["../../convex/_generated/*"]
+      "@ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
 }
