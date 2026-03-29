@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Check, Link2, AlertCircle } from 'lucide-react';
+import { Check, Link2, AlertCircle, Loader2 } from 'lucide-react';
 
 const STATUS_CONFIG = {
   connected: {
@@ -12,6 +12,11 @@ const STATUS_CONFIG = {
     badgeClass: 'bg-destructive/10 text-destructive',
     icon: AlertCircle,
   },
+  disconnected: {
+    badge: 'Disconnected',
+    badgeClass: 'bg-muted text-muted-foreground',
+    icon: Link2,
+  },
   not_connected: {
     badge: 'Not Connected',
     badgeClass: 'bg-muted text-muted-foreground',
@@ -20,12 +25,23 @@ const STATUS_CONFIG = {
 };
 
 /**
- * Single platform connection card with status, connect/disconnect, and brand color accent.
+ * Single platform connection card with status and connect/disconnect button.
  */
-export function PlatformCard({ platform, index, onConnect }) {
+export function PlatformCard({ platform, index, onConnect, isConnecting }) {
   const status = platform.status ?? 'not_connected';
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.not_connected;
   const StatusIcon = cfg.icon;
+  const isConnected = status === 'connected';
+
+  function formatDate(ts) {
+    if (!ts) return 'Never';
+    return new Date(ts).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
 
   return (
     <motion.div
@@ -56,22 +72,32 @@ export function PlatformCard({ platform, index, onConnect }) {
           {platform.description}
         </p>
 
-        {status === 'connected' && (
-          <div className="mt-3 text-xs text-muted-foreground">
-            <p>Account: {platform.accountName}</p>
-            <p>Last synced: {platform.lastSync}</p>
+        {isConnected && (
+          <div className="mt-3 space-y-0.5 text-xs text-muted-foreground">
+            {platform.accountName && <p>Account: {platform.accountName}</p>}
+            <p>Last synced: {formatDate(platform.lastSyncAt)}</p>
           </div>
         )}
 
         <button
           onClick={() => onConnect(platform.key)}
-          className={`mt-4 w-full rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
-            status === 'connected'
+          disabled={isConnecting}
+          className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-60 ${
+            isConnected
               ? 'border border-destructive/30 text-destructive hover:bg-destructive/5'
               : 'border border-border hover:bg-muted'
           }`}
         >
-          {status === 'connected' ? 'Disconnect' : 'Connect'}
+          {isConnecting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Connecting...
+            </>
+          ) : isConnected ? (
+            'Disconnect'
+          ) : (
+            'Connect'
+          )}
         </button>
       </div>
     </motion.div>

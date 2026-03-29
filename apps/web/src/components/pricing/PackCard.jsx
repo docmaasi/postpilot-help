@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Users, BarChart3 } from 'lucide-react';
+import { Zap, Users, BarChart3, Loader2 } from 'lucide-react';
+import { useAction } from 'convex/react';
+import { api } from '../../../../../convex/_generated/api';
 
 const PACKS = [
   {
+    key: 'content_blitz',
     name: 'Content Blitz Pack',
     price: 9.99,
     icon: Zap,
@@ -14,6 +18,7 @@ const PACKS = [
     ],
   },
   {
+    key: 'viral_growth',
     name: 'Viral Growth Pack',
     price: 14.99,
     icon: Users,
@@ -25,6 +30,7 @@ const PACKS = [
     ],
   },
   {
+    key: 'analytics',
     name: 'Analytics Pack',
     price: 19.99,
     icon: BarChart3,
@@ -48,7 +54,26 @@ export function PackCards() {
 }
 
 function PackCard({ pack, index }) {
-  const { name, price, icon: Icon, color, items } = pack;
+  const { key, name, price, icon: Icon, color, items } = pack;
+  const [loading, setLoading] = useState(false);
+  const createCheckout = useAction(
+    api.payments.stripe.createPackCheckoutSession
+  );
+
+  async function handleBuy() {
+    setLoading(true);
+    try {
+      const url = await createCheckout({
+        packType: key,
+        successUrl: `${window.location.origin}/billing?pack_success=true`,
+        cancelUrl: `${window.location.origin}/pricing`,
+      });
+      if (url) window.location.href = url;
+    } catch (err) {
+      console.error('Pack checkout error:', err);
+      setLoading(false);
+    }
+  }
 
   return (
     <motion.div
@@ -58,7 +83,6 @@ function PackCard({ pack, index }) {
       whileHover={{ y: -4, scale: 1.02 }}
       className="glass relative flex flex-col rounded-2xl p-6"
     >
-      {/* Gradient glow behind icon */}
       <div className={`absolute -top-4 left-6 h-12 w-12 rounded-xl bg-gradient-to-br ${color} p-2.5 shadow-lg`}>
         <Icon className="h-full w-full text-white" />
       </div>
@@ -85,8 +109,16 @@ function PackCard({ pack, index }) {
         ))}
       </ul>
 
-      <button className="w-full rounded-xl border border-primary/30 bg-primary/10 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20">
-        Buy Pack
+      <button
+        onClick={handleBuy}
+        disabled={loading}
+        className="w-full rounded-xl border border-primary/30 bg-primary/10 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loading ? (
+          <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+        ) : (
+          'Buy Pack'
+        )}
       </button>
     </motion.div>
   );

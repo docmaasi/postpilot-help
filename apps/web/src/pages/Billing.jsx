@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   CalendarClock,
@@ -5,14 +6,15 @@ import {
   Link2,
   Youtube,
   Users,
+  Loader2,
 } from 'lucide-react';
+import { useQuery, useAction } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 import { PlanCard } from '../components/billing/PlanCard.jsx';
 import { UsageMeter } from '../components/billing/UsageMeter.jsx';
 import { ReferralCard } from '../components/billing/ReferralCard.jsx';
 import { PackBalances } from '../components/billing/PackBalances.jsx';
 
-/* Static data — will be replaced with real Convex queries later */
-const CURRENT_PLAN = 'free';
 const PLAN_LIMITS = {
   free: { name: 'Free', scheduledPosts: 15, aiRewrites: 5, socialAccounts: 3, youtubeImports: 10, circleSlots: 0 },
   creator: { name: 'Creator', scheduledPosts: -1, aiRewrites: 50, socialAccounts: 10, youtubeImports: -1, circleSlots: 5 },
@@ -30,12 +32,32 @@ const REFERRAL = {
   stats: { invited: 3, subscribed: 1, credits: 15 },
 };
 
-const limits = PLAN_LIMITS[CURRENT_PLAN];
-
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } };
 
 export default function Billing() {
+  const profile = useQuery(api.userProfiles.getCurrent);
+  const subscription = useQuery(api.payments.subscriptions.getCurrent);
+  const createPortal = useAction(api.payments.stripe.createCustomerPortalSession);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const currentPlan = profile?.plan ?? 'free';
+  const limits = PLAN_LIMITS[currentPlan] ?? PLAN_LIMITS.free;
+  const subStatus = subscription?.status ?? 'active';
+
+  async function handleManageSubscription() {
+    setPortalLoading(true);
+    try {
+      const url = await createPortal({
+        returnUrl: window.location.href,
+      });
+      if (url) window.location.href = url;
+    } catch (err) {
+      console.error('Portal error:', err);
+      setPortalLoading(false);
+    }
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       {/* Header */}
@@ -47,7 +69,22 @@ export default function Billing() {
       </motion.div>
 
       {/* Current Plan */}
-      <PlanCard planKey={CURRENT_PLAN} planName={limits.name} />
+      <PlanCard planKey={currentPlan} planName={limits.name} status={subStatus} />
+
+      {/* Manage Subscription button (paid plans only) */}
+      {currentPlan !== 'free' && (
+        <button
+          onClick={handleManageSubscription}
+          disabled={portalLoading}
+          className="rounded-lg border border-border bg-secondary px-6 py-2 text-sm font-semibold transition-colors hover:bg-secondary/80 disabled:opacity-50"
+        >
+          {portalLoading ? (
+            <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+          ) : (
+            'Manage Subscription'
+          )}
+        </button>
+      )}
 
       {/* Usage Meters */}
       <section>

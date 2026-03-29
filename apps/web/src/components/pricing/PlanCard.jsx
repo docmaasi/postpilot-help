@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, X } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
+import { useAction } from 'convex/react';
+import { api } from '../../../../../convex/_generated/api';
 import { cn } from '@postpilot/lib';
 
 const PLANS = [
   {
+    key: 'free',
     name: 'Free',
     price: 0,
     cta: 'Get Started',
@@ -19,6 +23,7 @@ const PLANS = [
     ],
   },
   {
+    key: 'creator',
     name: 'Creator',
     price: 12,
     cta: 'Start Creating',
@@ -35,6 +40,7 @@ const PLANS = [
     ],
   },
   {
+    key: 'pro',
     name: 'Pro',
     price: 24,
     cta: 'Go Pro',
@@ -63,7 +69,25 @@ export function PlanCards() {
 }
 
 function PlanCard({ plan, index }) {
-  const { name, price, cta, popular, features } = plan;
+  const { key, name, price, cta, popular, features } = plan;
+  const [loading, setLoading] = useState(false);
+  const createCheckout = useAction(api.payments.stripe.createCheckoutSession);
+
+  async function handleUpgrade() {
+    if (key === 'free') return;
+    setLoading(true);
+    try {
+      const url = await createCheckout({
+        plan: key,
+        successUrl: `${window.location.origin}/billing?success=true`,
+        cancelUrl: `${window.location.origin}/pricing`,
+      });
+      if (url) window.location.href = url;
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setLoading(false);
+    }
+  }
 
   return (
     <motion.div
@@ -113,14 +137,21 @@ function PlanCard({ plan, index }) {
       </ul>
 
       <button
+        onClick={handleUpgrade}
+        disabled={loading || key === 'free'}
         className={cn(
           'w-full rounded-xl py-2.5 text-sm font-semibold transition-all',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
           popular
             ? 'bg-gradient-to-r from-primary to-accent text-white shadow-md hover:opacity-90'
             : 'border border-border bg-secondary text-foreground hover:bg-secondary/80'
         )}
       >
-        {cta}
+        {loading ? (
+          <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+        ) : (
+          cta
+        )}
       </button>
     </motion.div>
   );

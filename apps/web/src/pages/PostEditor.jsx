@@ -7,6 +7,7 @@ import { PLATFORM_ORDER } from '@/lib/platforms.js';
 import { PlatformTabs } from '../components/editor/PlatformTabs.jsx';
 import { ContentEditor } from '../components/editor/ContentEditor.jsx';
 import { PlatformPreview } from '../components/editor/PlatformPreview.jsx';
+import { AIPanel } from '../components/editor/AIPanel.jsx';
 
 export default function PostEditor() {
   const { id } = useParams();
@@ -89,6 +90,14 @@ export default function PostEditor() {
             hashtags={hashtags}
             onHashtagsChange={updateHashtags}
           />
+          <div className="mt-4">
+            <AIPanel
+              platform={platform}
+              content={content}
+              onInsert={updateContent}
+              onInsertHashtags={updateHashtags}
+            />
+          </div>
         </motion.div>
 
         {/* Preview column (40%) */}

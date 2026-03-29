@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from 'convex/react';
+import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from 'convex/_generated/api';
 
 // ─── User ────────────────────────────────────────────
@@ -122,4 +122,42 @@ export function useUpdateCollection() {
 
 export function useDeleteCollection() {
   return useMutation(api.collections.remove);
+}
+
+// ─── Publishing / OAuth ─────────────────────────────
+export function useConnectionStatus() {
+  return useQuery(api.publishing.oauthHelpers.getConnectionStatus);
+}
+
+export function useInitiateOAuth() {
+  return useAction(api.publishing.oauth.initiateOAuth);
+}
+
+export function usePublishPost() {
+  return useAction(api.publishing.publish.publishPost);
+}
+
+export function useDisconnectPlatform() {
+  return useMutation(api.publishing.oauthHelpers.disconnect);
+}
+
+// ─── AI Generation ──────────────────────────────────
+export function useGenerateCaption() {
+  return useAction(api.ai.generate.summarizeVideo);
+}
+
+export function useRewriteForPlatform() {
+  return useAction(api.ai.generate.rewriteForPlatform);
+}
+
+export function useSuggestHashtags() {
+  return useAction(api.ai.generate.suggestHashtags);
+}
+
+export function useSuggestCTAs() {
+  return useAction(api.ai.generateExtras.suggestCTAs);
+}
+
+export function useGenerateTones() {
+  return useAction(api.ai.generateExtras.generateMultipleTones);
 }
