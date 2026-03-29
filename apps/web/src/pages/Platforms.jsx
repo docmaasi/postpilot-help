@@ -4,10 +4,13 @@ import { platformInfo } from '../data/platform-info.js';
 import { PlatformCard } from '../components/platforms/PlatformCard.jsx';
 import { ShareButton } from '../components/shared/ShareButton.jsx';
 import { QRCode } from '../components/shared/QRCode.jsx';
+import { LandingNav } from '../components/landing/LandingNav.jsx';
 
 export default function Platforms() {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 pb-12">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="mx-auto max-w-4xl space-y-8 pb-12 pt-24">
       {/* Hero */}
       <motion.div
         initial={{ opacity: 0, y: -12 }}
@@ -54,6 +57,7 @@ export default function Platforms() {
         </p>
         <QRCode url="https://postpilothelp.vercel.app/platforms" />
       </motion.div>
+      </div>
     </div>
   );
 }

@@ -4,10 +4,13 @@ import { PlanCards } from '../components/pricing/PlanCard.jsx';
 import { PackCards } from '../components/pricing/PackCard.jsx';
 import { CirclesExplainer } from '../components/pricing/CirclesExplainer.jsx';
 import { ShareButton } from '../components/shared/ShareButton.jsx';
+import { LandingNav } from '../components/landing/LandingNav.jsx';
 
 export default function Pricing() {
   return (
-    <div className="space-y-12 pb-12">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="space-y-12 pb-12 pt-24">
       {/* Hero header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -53,6 +56,7 @@ export default function Pricing() {
       </div>
 
       <PackCards />
+      </div>
     </div>
   );
 }

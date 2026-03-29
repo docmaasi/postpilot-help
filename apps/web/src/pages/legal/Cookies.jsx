@@ -1,7 +1,11 @@
 import { LegalLayout, LegalSection } from './LegalLayout.jsx';
+import { LandingNav } from '../../components/landing/LandingNav.jsx';
 
 export default function Cookies() {
   return (
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="pt-24">
     <LegalLayout title="Cookie Policy" updated="March 2026">
       <LegalSection title="What Are Cookies?">
         <p>
@@ -72,5 +76,7 @@ export default function Cookies() {
         </p>
       </LegalSection>
     </LegalLayout>
+      </div>
+    </div>
   );
 }

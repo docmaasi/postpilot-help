@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Search, Calendar, Clock, User, ChevronRight } from 'lucide-react';
 import { blogPosts, blogCategories } from '../data/blog-posts.js';
 import { CategoryBadge } from '../components/blog/CategoryBadge.jsx';
+import { LandingNav } from '../components/landing/LandingNav.jsx';
 
 const POSTS_PER_PAGE = 9;
 
@@ -29,7 +30,9 @@ export default function Blog() {
   const hasMore = visibleCount < filtered.length;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="mx-auto max-w-6xl space-y-8 px-4 pt-24 pb-16">
       <BlogHero />
       <SearchBar value={search} onChange={setSearch} />
       <CategoryTabs
@@ -55,6 +58,7 @@ export default function Blog() {
           No articles found. Try a different search or category.
         </p>
       )}
+      </div>
     </div>
   );
 }

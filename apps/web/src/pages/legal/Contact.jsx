@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Clock, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 import { ContactForm } from './contact-form.jsx';
 import { ContactFAQ } from './contact-faq.jsx';
+import { LandingNav } from '../../components/landing/LandingNav.jsx';
 
 const SOCIAL = [
   { icon: Twitter, label: 'Twitter', href: '#' },
@@ -12,7 +13,9 @@ const SOCIAL = [
 
 export default function Contact() {
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="mx-auto max-w-3xl pt-24">
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
         <img src="/logo.png" alt="PostPilot" className="h-8 w-auto" />
@@ -70,6 +73,7 @@ export default function Contact() {
         <Link to="/" className="text-sm text-primary hover:underline">
           &larr; Back to Dashboard
         </Link>
+      </div>
       </div>
     </div>
   );

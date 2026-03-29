@@ -7,6 +7,7 @@ import { CategoryBadge } from '../components/blog/CategoryBadge.jsx';
 import { ShareBar } from '../components/blog/ShareBar.jsx';
 import { RelatedArticles } from '../components/blog/RelatedArticles.jsx';
 import { ShareButton } from '../components/shared/ShareButton.jsx';
+import { LandingNav } from '../components/landing/LandingNav.jsx';
 
 export default function BlogPost() {
   const { id } = useParams();
@@ -22,7 +23,9 @@ export default function BlogPost() {
   if (!post) return <NotFound />;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="min-h-screen bg-background">
+      <LandingNav />
+      <div className="mx-auto max-w-3xl space-y-8 px-4 pt-24 pb-16">
       <div className="flex items-center justify-between">
         <BackLink />
         <ShareButton
@@ -36,6 +39,7 @@ export default function BlogPost() {
       <TagList tags={post.tags} />
       <ShareBar id={post.id} title={post.title} />
       {related.length > 0 && <RelatedArticles posts={related} />}
+      </div>
     </div>
   );
 }
