@@ -52,7 +52,7 @@ export default function Platforms() {
         <p className="text-sm text-muted-foreground">
           Scan the QR code to open this page on another device.
         </p>
-        <QRCode url="https://postpilot.help/platforms" />
+        <QRCode url="https://postpilothelp.vercel.app/platforms" />
       </motion.div>
     </div>
   );

@@ -1,65 +1,7 @@
-import { motion } from 'framer-motion';
-import {
-  Youtube,
-  Twitter,
-  Instagram,
-  Facebook,
-  Linkedin,
-  Music2,
-  AtSign,
-} from 'lucide-react';
-
-const platforms = [
-  {
-    Icon: Youtube,
-    name: 'YouTube',
-    color: '#FF0000',
-    bg: 'from-red-500/10 to-red-500/5',
-    desc: 'Import videos and repurpose them into posts for every other platform automatically.',
-  },
-  {
-    Icon: Instagram,
-    name: 'Instagram',
-    color: '#E4405F',
-    bg: 'from-pink-500/10 to-pink-500/5',
-    desc: 'Plan Reels, Stories, and carousels with pixel-perfect previews before publishing.',
-  },
-  {
-    Icon: Twitter,
-    name: 'X / Twitter',
-    color: '#1DA1F2',
-    bg: 'from-sky-500/10 to-sky-500/5',
-    desc: 'Schedule tweets with perfect timing and AI-generated thread ideas.',
-  },
-  {
-    Icon: Facebook,
-    name: 'Facebook',
-    color: '#1877F2',
-    bg: 'from-blue-600/10 to-blue-600/5',
-    desc: 'Auto-post to Pages and Groups to keep your community engaged daily.',
-  },
-  {
-    Icon: Linkedin,
-    name: 'LinkedIn',
-    color: '#0A66C2',
-    bg: 'from-blue-700/10 to-blue-700/5',
-    desc: 'Grow your professional audience with polished, business-ready content.',
-  },
-  {
-    Icon: Music2,
-    name: 'TikTok',
-    color: '#00F2EA',
-    bg: 'from-teal-400/10 to-teal-400/5',
-    desc: 'Clip and share short-form video to reach the fastest-growing audience.',
-  },
-  {
-    Icon: AtSign,
-    name: 'Threads',
-    color: '#000000',
-    bg: 'from-gray-500/10 to-gray-500/5',
-    desc: 'Cross-post to Threads instantly and join the conversation on Meta\'s newest platform.',
-  },
-];
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { platforms } from './platform-data.js';
+import { PlatformModal } from './PlatformModal.jsx';
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 const card = {
@@ -68,6 +10,8 @@ const card = {
 };
 
 export function PlatformShowcase() {
+  const [selected, setSelected] = useState(null);
+
   return (
     <section className="py-24 px-4">
       <div className="max-w-6xl mx-auto text-center space-y-12">
@@ -82,20 +26,35 @@ export function PlatformShowcase() {
           whileInView="show"
           viewport={{ once: true, margin: '-50px' }}
         >
-          {platforms.map(({ Icon, name, color, bg, desc }) => (
-            <motion.div
-              key={name}
+          {platforms.map((platform) => (
+            <motion.button
+              key={platform.name}
               variants={card}
-              className={`bg-gradient-to-br ${bg} rounded-2xl p-6 text-left space-y-4
-                hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}
+              onClick={() => setSelected(platform)}
+              className={`bg-gradient-to-br ${platform.bg} rounded-2xl p-6 text-left space-y-4
+                hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer`}
             >
-              <Icon className="h-12 w-12" style={{ color }} />
-              <h3 className="font-bold text-lg font-display">{name}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
-            </motion.div>
+              <platform.Icon className="h-12 w-12" style={{ color: platform.color }} />
+              <h3 className="font-bold text-lg font-display">{platform.name}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {platform.desc}
+              </p>
+              <span className="text-xs font-medium text-primary">
+                Click to learn more &rarr;
+              </span>
+            </motion.button>
           ))}
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {selected && (
+          <PlatformModal
+            platform={selected}
+            onClose={() => setSelected(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
