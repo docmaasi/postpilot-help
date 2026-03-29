@@ -18,7 +18,7 @@ export function CTASection() {
         </h2>
 
         <a
-          href="/sign-up"
+          href="/login"
           className="inline-block px-10 py-4 rounded-xl bg-gradient-to-r from-primary to-accent
             text-white font-bold text-lg shadow-lg hover:shadow-xl transition-shadow"
         >

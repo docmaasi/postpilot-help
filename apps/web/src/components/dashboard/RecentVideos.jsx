@@ -13,7 +13,7 @@ export function RecentVideos({ videos }) {
     <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Recent Videos</h2>
-        <Link to="/videos" className="text-xs font-medium text-primary hover:underline">
+        <Link to="/app/videos" className="text-xs font-medium text-primary hover:underline">
           View all
         </Link>
       </div>
@@ -31,7 +31,7 @@ export function RecentVideos({ videos }) {
           {recent.map((video) => (
             <Link
               key={video._id}
-              to={`/videos/${video._id}`}
+              to={`/app/videos/${video._id}`}
               className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-muted/50"
             >
               <img

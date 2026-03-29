@@ -1,3 +1,4 @@
+import { LandingNav } from '../components/landing/LandingNav.jsx';
 import { HeroSection } from '../components/landing/HeroSection.jsx';
 import { PlatformStrip } from '../components/landing/PlatformStrip.jsx';
 import { HowItWorks } from '../components/landing/HowItWorks.jsx';
@@ -9,6 +10,7 @@ import { CTASection } from '../components/landing/CTASection.jsx';
 export default function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+      <LandingNav />
       <HeroSection />
       <PlatformStrip />
       <HowItWorks />

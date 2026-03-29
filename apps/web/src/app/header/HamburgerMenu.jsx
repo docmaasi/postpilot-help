@@ -1,47 +1,46 @@
 import { forwardRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Youtube, PenSquare, CalendarDays, Image,
   Copy, Megaphone, Users, BarChart3, MessageCircle, TrendingUp,
-  Link2, Sparkles, CreditCard, Gift, Settings,
+  Link2, CreditCard, Gift, Settings,
 } from 'lucide-react';
 
 const MENU_SECTIONS = [
   {
     title: 'Content',
     items: [
-      { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-      { to: '/videos', icon: Youtube, label: 'Videos' },
-      { to: '/posts', icon: PenSquare, label: 'Posts' },
-      { to: '/calendar', icon: CalendarDays, label: 'Calendar' },
-      { to: '/media', icon: Image, label: 'Media' },
+      { to: '/app', icon: LayoutDashboard, label: 'Dashboard' },
+      { to: '/app/videos', icon: Youtube, label: 'Videos' },
+      { to: '/app/posts', icon: PenSquare, label: 'Posts' },
+      { to: '/app/calendar', icon: CalendarDays, label: 'Calendar' },
+      { to: '/app/media', icon: Image, label: 'Media' },
     ],
   },
   {
     title: 'Organize',
     items: [
-      { to: '/templates', icon: Copy, label: 'Templates' },
-      { to: '/campaigns', icon: Megaphone, label: 'Campaigns' },
-      { to: '/circles', icon: Users, label: 'Circles' },
+      { to: '/app/templates', icon: Copy, label: 'Templates' },
+      { to: '/app/campaigns', icon: Megaphone, label: 'Campaigns' },
+      { to: '/app/circles', icon: Users, label: 'Circles' },
     ],
   },
   {
     title: 'Insights',
     items: [
-      { to: '/analytics', icon: BarChart3, label: 'Analytics' },
-      { to: '/comments', icon: MessageCircle, label: 'Comments' },
-      { to: '/trending', icon: TrendingUp, label: 'Trending' },
+      { to: '/app/analytics', icon: BarChart3, label: 'Analytics' },
+      { to: '/app/comments', icon: MessageCircle, label: 'Comments' },
+      { to: '/app/trending', icon: TrendingUp, label: 'Trending' },
     ],
   },
   {
     title: 'Account',
     items: [
-      { to: '/connections', icon: Link2, label: 'Connections' },
-      { to: '/pricing', icon: Sparkles, label: 'Pricing' },
-      { to: '/billing', icon: CreditCard, label: 'Billing' },
-      { to: '/referrals', icon: Gift, label: 'Referrals' },
-      { to: '/settings', icon: Settings, label: 'Settings' },
+      { to: '/app/connections', icon: Link2, label: 'Connections' },
+      { to: '/app/billing', icon: CreditCard, label: 'Billing' },
+      { to: '/app/referrals', icon: Gift, label: 'Referrals' },
+      { to: '/app/settings', icon: Settings, label: 'Settings' },
     ],
   },
 ];

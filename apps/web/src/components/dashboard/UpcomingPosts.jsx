@@ -18,7 +18,7 @@ export function UpcomingPosts({ posts }) {
     <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Upcoming Posts</h2>
-        <Link to="/calendar" className="text-xs font-medium text-primary hover:underline">
+        <Link to="/app/calendar" className="text-xs font-medium text-primary hover:underline">
           Calendar
         </Link>
       </div>
@@ -38,7 +38,7 @@ export function UpcomingPosts({ posts }) {
             return (
               <Link
                 key={post._id}
-                to={`/posts/${post._id}`}
+                to={`/app/posts/${post._id}`}
                 className="flex items-start gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/50 hover:bg-muted/50"
                 style={{ borderLeftWidth: 3, borderLeftColor: platform.color }}
               >

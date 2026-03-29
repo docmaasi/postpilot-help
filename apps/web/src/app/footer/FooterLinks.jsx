@@ -4,11 +4,11 @@ const FOOTER_COLUMNS = [
   {
     title: 'Product',
     links: [
-      { label: 'Dashboard', to: '/' },
-      { label: 'Post Editor', to: '/posts/new' },
-      { label: 'Calendar', to: '/calendar' },
-      { label: 'Media Library', to: '/media' },
-      { label: 'Templates', to: '/templates' },
+      { label: 'Dashboard', to: '/app' },
+      { label: 'Post Editor', to: '/app/posts/new' },
+      { label: 'Calendar', to: '/app/calendar' },
+      { label: 'Media Library', to: '/app/media' },
+      { label: 'Templates', to: '/app/templates' },
       { label: 'Pricing', to: '/pricing' },
     ],
   },

@@ -15,7 +15,7 @@ export function DraftPosts({ posts }) {
     <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Draft Posts</h2>
-        <Link to="/posts" className="text-xs font-medium text-primary hover:underline">
+        <Link to="/app/posts" className="text-xs font-medium text-primary hover:underline">
           View all
         </Link>
       </div>
@@ -35,7 +35,7 @@ export function DraftPosts({ posts }) {
             return (
               <Link
                 key={post._id}
-                to={`/posts/${post._id}`}
+                to={`/app/posts/${post._id}`}
                 className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-muted/50"
               >
                 <div

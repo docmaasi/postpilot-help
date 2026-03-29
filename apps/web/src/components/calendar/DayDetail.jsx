@@ -39,7 +39,7 @@ export function DayDetail({ date, posts, onClose }) {
               return (
                 <Link
                   key={post._id}
-                  to={`/posts/${post._id}`}
+                  to={`/app/posts/${post._id}`}
                   className="flex gap-3 rounded-lg border border-border/50 p-3 transition-colors hover:bg-muted/50"
                 >
                   <div

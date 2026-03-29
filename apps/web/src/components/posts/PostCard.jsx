@@ -39,7 +39,7 @@ export function PostCard({ post }) {
     <motion.div
       variants={item}
       layout
-      onClick={() => navigate(`/posts/${post._id}`)}
+      onClick={() => navigate(`/app/posts/${post._id}`)}
       className={`cursor-pointer rounded-xl border border-border border-l-4 ${borderColor} bg-card p-4 glow-card transition-colors hover:bg-muted/30`}
     >
       <div className="flex items-start gap-3">

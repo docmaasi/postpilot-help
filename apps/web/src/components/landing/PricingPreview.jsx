@@ -86,7 +86,7 @@ export function PricingPreview() {
               </ul>
 
               <a
-                href={highlight ? '/sign-up' : '/pricing'}
+                href={highlight ? '/login' : '/pricing'}
                 className={`block text-center py-2.5 rounded-xl font-semibold text-sm transition-colors ${
                   highlight
                     ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'

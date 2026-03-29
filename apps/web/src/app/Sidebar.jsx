@@ -12,7 +12,6 @@ import {
   TrendingUp,
   Link2,
   CreditCard,
-  Sparkles,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -26,37 +25,36 @@ const NAV_SECTIONS = [
   {
     label: 'Content',
     items: [
-      { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-      { to: '/videos', icon: Youtube, label: 'Videos' },
-      { to: '/posts', icon: PenSquare, label: 'Posts' },
-      { to: '/calendar', icon: CalendarDays, label: 'Calendar' },
-      { to: '/media', icon: Image, label: 'Media' },
+      { to: '/app', icon: LayoutDashboard, label: 'Dashboard' },
+      { to: '/app/videos', icon: Youtube, label: 'Videos' },
+      { to: '/app/posts', icon: PenSquare, label: 'Posts' },
+      { to: '/app/calendar', icon: CalendarDays, label: 'Calendar' },
+      { to: '/app/media', icon: Image, label: 'Media' },
     ],
   },
   {
     label: 'Organize',
     items: [
-      { to: '/templates', icon: Copy, label: 'Templates' },
-      { to: '/campaigns', icon: Megaphone, label: 'Campaigns' },
-      { to: '/circles', icon: Users, label: 'Circles' },
+      { to: '/app/templates', icon: Copy, label: 'Templates' },
+      { to: '/app/campaigns', icon: Megaphone, label: 'Campaigns' },
+      { to: '/app/circles', icon: Users, label: 'Circles' },
     ],
   },
   {
     label: 'Insights',
     items: [
-      { to: '/analytics', icon: BarChart3, label: 'Analytics' },
-      { to: '/comments', icon: MessageCircle, label: 'Comments' },
-      { to: '/trending', icon: TrendingUp, label: 'Trending' },
+      { to: '/app/analytics', icon: BarChart3, label: 'Analytics' },
+      { to: '/app/comments', icon: MessageCircle, label: 'Comments' },
+      { to: '/app/trending', icon: TrendingUp, label: 'Trending' },
     ],
   },
   {
     label: 'Settings',
     items: [
-      { to: '/connections', icon: Link2, label: 'Connections' },
-      { to: '/pricing', icon: Sparkles, label: 'Pricing' },
-      { to: '/billing', icon: CreditCard, label: 'Billing' },
-      { to: '/referrals', icon: Gift, label: 'Referrals' },
-      { to: '/settings', icon: Settings, label: 'Settings' },
+      { to: '/app/connections', icon: Link2, label: 'Connections' },
+      { to: '/app/billing', icon: CreditCard, label: 'Billing' },
+      { to: '/app/referrals', icon: Gift, label: 'Referrals' },
+      { to: '/app/settings', icon: Settings, label: 'Settings' },
     ],
   },
 ];
@@ -89,8 +87,8 @@ export function Sidebar({ isOpen, onToggle, isMobile = false }) {
             <div className="flex flex-col gap-0.5">
               {section.items.map((item) => {
                 const isActive =
-                  item.to === '/'
-                    ? location.pathname === '/'
+                  item.to === '/app'
+                    ? location.pathname === '/app'
                     : location.pathname.startsWith(item.to);
 
                 return (

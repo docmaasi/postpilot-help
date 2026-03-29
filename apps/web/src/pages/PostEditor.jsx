@@ -51,7 +51,7 @@ export default function PostEditor() {
       } else {
         await createPost(payload);
       }
-      navigate('/posts');
+      navigate('/app/posts');
     } catch {
       /* TODO: toast error */
     } finally {
@@ -65,7 +65,7 @@ export default function PostEditor() {
       <Header
         isEditing={isEditing}
         saving={saving}
-        onBack={() => navigate('/posts')}
+        onBack={() => navigate('/app/posts')}
         onSaveDraft={() => handleSave('draft')}
         onSchedule={() => handleSave('scheduled')}
       />

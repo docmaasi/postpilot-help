@@ -51,9 +51,9 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            <span className="gradient-text">Your Content</span>
+            <span className="gradient-text">Turn One Video</span>
             <br />
-            <span className="gradient-text">Command Center</span>
+            <span className="gradient-text">Into Posts Everywhere</span>
           </motion.h1>
 
           <motion.p
@@ -73,14 +73,14 @@ export function HeroSection() {
             transition={{ delay: 0.45 }}
           >
             <a
-              href="/sign-up"
+              href="/login"
               className="px-8 py-3 rounded-xl bg-gradient-to-r from-primary to-accent
                 text-white font-semibold shadow-lg hover:shadow-xl transition-shadow"
             >
               Start Free
             </a>
             <a
-              href="#pricing"
+              href="/pricing"
               className="px-8 py-3 rounded-xl border-2 border-primary/40 font-semibold
                 hover:bg-primary/5 transition-colors"
             >

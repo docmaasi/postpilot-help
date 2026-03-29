@@ -11,7 +11,7 @@ export function RepurposeSection({ videoId }) {
   const navigate = useNavigate();
 
   function handlePlatformClick(platformKey) {
-    navigate(`/posts/new?videoId=${videoId}&platform=${platformKey}`);
+    navigate(`/app/posts/new?videoId=${videoId}&platform=${platformKey}`);
   }
 
   return (

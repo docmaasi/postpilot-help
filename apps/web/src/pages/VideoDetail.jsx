@@ -18,7 +18,7 @@ export default function VideoDetail() {
     return <LoadingSkeleton />;
   }
   if (video === null) {
-    return <NotFound onBack={() => navigate('/videos')} />;
+    return <NotFound onBack={() => navigate('/app/videos')} />;
   }
 
   async function toggleFavorite() {
@@ -29,7 +29,7 @@ export default function VideoDetail() {
     <div className="mx-auto max-w-4xl space-y-6">
       {/* Back button */}
       <button
-        onClick={() => navigate('/videos')}
+        onClick={() => navigate('/app/videos')}
         className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -40,7 +40,7 @@ export default function VideoDetail() {
 
       {/* Action buttons */}
       <div className="flex flex-wrap gap-3">
-        <ActionBtn icon={PlusCircle} label="Create Post" onClick={() => navigate(`/posts/new?videoId=${id}`)} />
+        <ActionBtn icon={PlusCircle} label="Create Post" onClick={() => navigate(`/app/posts/new?videoId=${id}`)} />
         <ActionBtn icon={Pencil} label="Edit Details" />
         <ActionBtn icon={Archive} label="Archive" variant="muted" />
       </div>

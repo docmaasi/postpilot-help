@@ -34,7 +34,7 @@ export function EmptyPosts({ activeTab }) {
       <p className="mb-4 text-sm text-muted-foreground">{msg.desc}</p>
       {activeTab !== 'failed' && (
         <button
-          onClick={() => navigate('/posts/new')}
+          onClick={() => navigate('/app/posts/new')}
           className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           Create Post

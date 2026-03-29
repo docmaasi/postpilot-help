@@ -45,7 +45,7 @@ export function PlatformCard({ platform, index }) {
 
         {/* CTA */}
         <Link
-          to="/posts/new"
+          to="/app/posts/new"
           className="inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
           style={{ backgroundColor: platform.color }}
         >

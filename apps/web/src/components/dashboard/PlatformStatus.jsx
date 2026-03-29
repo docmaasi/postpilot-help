@@ -10,7 +10,7 @@ export function PlatformStatus() {
     <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Platform Status</h2>
-        <Link to="/connections" className="text-xs font-medium text-primary hover:underline">
+        <Link to="/app/connections" className="text-xs font-medium text-primary hover:underline">
           Manage
         </Link>
       </div>

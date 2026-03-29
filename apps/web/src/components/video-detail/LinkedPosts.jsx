@@ -34,7 +34,7 @@ export function LinkedPosts({ youtubeVideoId }) {
             return (
               <Link
                 key={post._id}
-                to={`/posts/${post._id}`}
+                to={`/app/posts/${post._id}`}
                 className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-3 transition-colors hover:bg-muted"
               >
                 <div className="flex items-center gap-3">

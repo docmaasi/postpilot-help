@@ -19,4 +19,11 @@ export const blogCategories = [
   'Social Media Trends',
   'Analytics',
   'Growth Hacking',
+  'Analytics & Performance',
+  'Social Media Strategy',
+  'Platform Guides',
+  'Content Repurposing',
+  'Scheduling & Consistency',
+  'Creator Workflow',
+  'AI for Content',
 ];
