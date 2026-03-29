@@ -1,92 +1,67 @@
-import {
-  LayoutDashboard,
-  Youtube,
-  PenSquare,
-  CalendarDays,
-  Link2,
-  TrendingUp,
-} from 'lucide-react';
-
-const STATS = [
-  { label: 'Scheduled Posts', value: '0', icon: CalendarDays, color: 'text-primary' },
-  { label: 'Draft Posts', value: '0', icon: PenSquare, color: 'text-warning' },
-  { label: 'Videos Imported', value: '0', icon: Youtube, color: 'text-destructive' },
-  { label: 'Connected Platforms', value: '0', icon: Link2, color: 'text-info' },
-];
+import { useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { useVideos, usePosts, useCurrentUser } from '@postpilot/lib';
+import { StatsGrid } from '../components/dashboard/StatsGrid.jsx';
+import { RecentVideos } from '../components/dashboard/RecentVideos.jsx';
+import { UpcomingPosts } from '../components/dashboard/UpcomingPosts.jsx';
+import { DraftPosts } from '../components/dashboard/DraftPosts.jsx';
+import { PlatformStatus } from '../components/dashboard/PlatformStatus.jsx';
 
 export default function Dashboard() {
+  const user = useCurrentUser();
+  const videos = useVideos();
+  const posts = usePosts();
+
+  /** Compute stats from real data */
+  const stats = useMemo(() => {
+    const allPosts = posts ?? [];
+    return {
+      videos: videos?.length ?? 0,
+      posts: allPosts.length,
+      scheduled: allPosts.filter((p) => p.status === 'scheduled').length,
+      drafts: allPosts.filter((p) => p.status === 'draft').length,
+    };
+  }, [videos, posts]);
+
+  const greeting = getGreeting();
+  const displayName = user?.displayName?.split(' ')[0] || 'Creator';
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">
-          Your content command center
+    <div className="mx-auto max-w-6xl space-y-6">
+      {/* Welcome header with gradient */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <h1 className="text-3xl font-bold">
+          {greeting},{' '}
+          <span className="bg-gradient-to-r from-violet-500 via-pink-500 to-orange-400 bg-clip-text text-transparent">
+            {displayName}
+          </span>
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Here is what is happening with your content today.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STATS.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-border bg-card p-5 shadow-subtle"
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
-              <stat.icon className={`h-5 w-5 ${stat.color}`} />
-            </div>
-            <p className="mt-2 text-3xl font-bold">{stat.value}</p>
-          </div>
-        ))}
-      </div>
+      {/* Stats cards */}
+      <StatsGrid stats={stats} />
 
-      {/* Content sections */}
+      {/* Two-column widget grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Upcoming posts */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
-          <h2 className="mb-4 text-lg font-semibold">Upcoming Posts</h2>
-          <div className="flex h-32 items-center justify-center text-muted-foreground">
-            <p className="text-sm">No scheduled posts yet</p>
-          </div>
-        </div>
-
-        {/* Recent videos */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
-          <h2 className="mb-4 text-lg font-semibold">Recent Videos</h2>
-          <div className="flex h-32 items-center justify-center text-muted-foreground">
-            <p className="text-sm">No videos imported yet</p>
-          </div>
-        </div>
-
-        {/* Calendar preview */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
-          <h2 className="mb-4 text-lg font-semibold">Calendar Preview</h2>
-          <div className="flex h-32 items-center justify-center text-muted-foreground">
-            <p className="text-sm">Your content calendar will appear here</p>
-          </div>
-        </div>
-
-        {/* Platform status */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-subtle">
-          <h2 className="mb-4 text-lg font-semibold">Platform Status</h2>
-          <div className="space-y-3">
-            {['YouTube', 'X / Twitter', 'Instagram', 'Facebook', 'LinkedIn', 'TikTok', 'Threads'].map(
-              (platform) => (
-                <div
-                  key={platform}
-                  className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2"
-                >
-                  <span className="text-sm">{platform}</span>
-                  <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                    Not connected
-                  </span>
-                </div>
-              )
-            )}
-          </div>
-        </div>
+        <RecentVideos videos={videos} />
+        <UpcomingPosts posts={posts} />
+        <DraftPosts posts={posts} />
+        <PlatformStatus />
       </div>
     </div>
   );
+}
+
+/** Returns a time-of-day greeting */
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
 }

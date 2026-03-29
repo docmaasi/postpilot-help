@@ -30,6 +30,7 @@ export default defineSchema({
     timezone: v.optional(v.string()),
     plan: v.optional(v.string()),
     stripeCustomerId: v.optional(v.string()),
+    referralCode: v.optional(v.string()),
     preferences: v.optional(v.object({
       theme: v.optional(v.string()),
       defaultPlatforms: v.optional(v.array(v.string())),
@@ -39,7 +40,8 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_visitorId", ["visitorId"])
-    .index("by_stripe_customer", ["stripeCustomerId"]),
+    .index("by_stripe_customer", ["stripeCustomerId"])
+    .index("by_referralCode", ["referralCode"]),
 
   // ── YOUTUBE VIDEOS ─────────────────────────────────
   youtubeVideos: defineTable({
@@ -327,8 +329,8 @@ export default defineSchema({
     stripeSubscriptionId: v.string(),
     plan: v.union(
       v.literal("free"),
-      v.literal("pro"),
-      v.literal("business")
+      v.literal("creator"),
+      v.literal("pro")
     ),
     status: v.union(
       v.literal("active"),
@@ -353,4 +355,126 @@ export default defineSchema({
   })
     .index("by_userId", ["userId"])
     .index("by_feature", ["userId", "feature"]),
+
+  // ── WORKSPACES (Circle collaboration) ─────────────
+  workspaces: defineTable({
+    ownerId: v.string(),
+    name: v.string(),
+    plan: v.union(
+      v.literal("free"),
+      v.literal("creator"),
+      v.literal("pro")
+    ),
+    stripeCustomerId: v.optional(v.string()),
+    stripeSubscriptionId: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_ownerId", ["ownerId"]),
+
+  // ── WORKSPACE MEMBERS (Circle users) ──────────────
+  workspaceMembers: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.string(),
+    email: v.string(),
+    role: v.union(
+      v.literal("owner"),
+      v.literal("contributor"),
+      v.literal("editor"),
+      v.literal("publisher"),
+      v.literal("viewer")
+    ),
+    permissions: v.optional(v.object({
+      canCreateDrafts: v.optional(v.boolean()),
+      canEditDrafts: v.optional(v.boolean()),
+      canUploadMedia: v.optional(v.boolean()),
+      canPublish: v.optional(v.boolean()),
+      canManageAccounts: v.optional(v.boolean()),
+    })),
+    status: v.union(
+      v.literal("active"),
+      v.literal("invited"),
+      v.literal("removed")
+    ),
+    invitedBy: v.string(),
+    invitedAt: v.number(),
+    joinedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_workspaceId", ["workspaceId"])
+    .index("by_userId", ["userId"])
+    .index("by_email", ["email"]),
+
+  // ── ADD-ON PURCHASES ──────────────────────────────
+  addOnPurchases: defineTable({
+    userId: v.string(),
+    workspaceId: v.optional(v.id("workspaces")),
+    packType: v.union(
+      v.literal("content_blitz"),
+      v.literal("viral_growth"),
+      v.literal("analytics")
+    ),
+    stripePaymentId: v.optional(v.string()),
+    status: v.union(
+      v.literal("active"),
+      v.literal("consumed"),
+      v.literal("refunded")
+    ),
+    purchasedAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_workspaceId", ["workspaceId"]),
+
+  // ── PACK BALANCES ─────────────────────────────────
+  packBalances: defineTable({
+    userId: v.string(),
+    aiRewrites: v.number(),
+    scheduledPosts: v.number(),
+    circleSlots: v.number(),
+    analyticsUnlocked: v.optional(v.boolean()),
+    viralTemplatesUnlocked: v.optional(v.boolean()),
+    updatedAt: v.number(),
+  }).index("by_userId", ["userId"]),
+
+  // ── REFERRALS ─────────────────────────────────────
+  referrals: defineTable({
+    referrerId: v.string(),
+    referralCode: v.string(),
+    referredUserId: v.optional(v.string()),
+    referredEmail: v.optional(v.string()),
+    status: v.union(
+      v.literal("invited"),
+      v.literal("signed_up"),
+      v.literal("subscribed"),
+      v.literal("rewarded")
+    ),
+    rewardType: v.optional(v.string()),
+    rewardAmount: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_referrerId", ["referrerId"])
+    .index("by_referralCode", ["referralCode"])
+    .index("by_referredUserId", ["referredUserId"]),
+
+  // ── INVITE TOKENS ─────────────────────────────────
+  inviteTokens: defineTable({
+    workspaceId: v.id("workspaces"),
+    email: v.string(),
+    role: v.string(),
+    token: v.string(),
+    invitedBy: v.string(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("accepted"),
+      v.literal("expired"),
+      v.literal("revoked")
+    ),
+    expiresAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index("by_token", ["token"])
+    .index("by_workspaceId", ["workspaceId"])
+    .index("by_email", ["email"]),
 });

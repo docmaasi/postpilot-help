@@ -20,6 +20,7 @@ const Trending = React.lazy(() => import('./pages/Trending.jsx'));
 const Connections = React.lazy(() => import('./pages/Connections.jsx'));
 const Billing = React.lazy(() => import('./pages/Billing.jsx'));
 const Settings = React.lazy(() => import('./pages/Settings.jsx'));
+const Pricing = React.lazy(() => import('./pages/Pricing.jsx'));
 
 export function App() {
   return (
@@ -45,6 +46,7 @@ export function App() {
               <Route path="/connections" element={<Connections />} />
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/pricing" element={<Pricing />} />
             </Route>
           </Routes>
         </SignedIn>

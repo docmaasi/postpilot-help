@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Link2,
   CreditCard,
+  Sparkles,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -49,6 +50,7 @@ const NAV_SECTIONS = [
     label: 'Settings',
     items: [
       { to: '/connections', icon: Link2, label: 'Connections' },
+      { to: '/pricing', icon: Sparkles, label: 'Pricing' },
       { to: '/billing', icon: CreditCard, label: 'Billing' },
       { to: '/settings', icon: Settings, label: 'Settings' },
     ],
