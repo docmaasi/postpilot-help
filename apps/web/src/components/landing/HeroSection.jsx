@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { HeroPlatformIcons } from './HeroPlatformIcons.jsx';
 import { ArrowRight, Play } from 'lucide-react';
 
-/* Free stock photos from Unsplash — people using phones, social media, content creation */
+/* Free stock photos — content creators, teamwork, social media planning */
 const PHOTOS = [
-  'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop',
-  'https://images.unsplash.com/photo-1552581234-26160f608093?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&h=300&fit=crop',
 ];
 
 export function HeroSection() {
