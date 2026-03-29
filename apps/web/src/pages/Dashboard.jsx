@@ -43,7 +43,12 @@ export default function Dashboard() {
   async function saveName() {
     const trimmed = nameInput.trim();
     if (trimmed) {
-      await updateProfile({ displayName: trimmed });
+      try {
+        await updateProfile({ displayName: trimmed });
+      } catch (err) {
+        console.error('Failed to save name:', err);
+        window.alert('Failed to save name. Please try again.');
+      }
     }
     setEditing(false);
   }
