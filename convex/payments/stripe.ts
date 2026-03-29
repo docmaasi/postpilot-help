@@ -4,7 +4,19 @@ import { action } from "../_generated/server";
 import { v } from "convex/values";
 import Stripe from "stripe";
 import { api, internal } from "../_generated/api";
-import { PLANS, PACKS, type PlanId, type PackId } from "../lib/plans";
+
+// ── Stripe Price IDs ───────────────────────────────
+
+const SUBSCRIPTION_PRICES: Record<string, string> = {
+  creator: "price_1TGK2pDw3DaD2xXn2hxEmYbI",
+  pro: "price_1TGK7MDw3DaD2xXnrVsjzq31",
+};
+
+const PACK_PRICES: Record<string, string> = {
+  content_blitz: "price_1TGK98Dw3DaD2xXnEEwX5ySJ",
+  viral_growth: "price_1TGKArDw3DaD2xXnAUhS0GYL",
+  analytics: "price_1TGKCMDw3DaD2xXnz6avRrQF",
+};
 
 // ── Stripe client ───────────────────────────────────
 
@@ -54,22 +66,15 @@ export const createCheckoutSession = action({
     const email = identity.email ?? undefined;
     const stripe = getStripe();
     const customerId = await getOrCreateCustomer(stripe, ctx, userId, email);
-    const planConfig = PLANS[plan];
+    const priceId = SUBSCRIPTION_PRICES[plan];
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: { name: `PostPilot ${planConfig.name}` },
-            unit_amount: planConfig.price * 100,
-            recurring: { interval: "month" },
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
+      subscription_data: {
+        metadata: { plan, convexUserId: userId },
+      },
       metadata: { plan, convexUserId: userId },
       success_url: successUrl,
       cancel_url: cancelUrl,
@@ -99,21 +104,12 @@ export const createPackCheckoutSession = action({
     const email = identity.email ?? undefined;
     const stripe = getStripe();
     const customerId = await getOrCreateCustomer(stripe, ctx, userId, email);
-    const pack = PACKS[packType];
+    const priceId = PACK_PRICES[packType];
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "payment",
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: { name: pack.name },
-            unit_amount: Math.round(pack.price * 100),
-          },
-          quantity: 1,
-        },
-      ],
+      line_items: [{ price: priceId, quantity: 1 }],
       metadata: { packType, convexUserId: userId },
       success_url: successUrl,
       cancel_url: cancelUrl,
