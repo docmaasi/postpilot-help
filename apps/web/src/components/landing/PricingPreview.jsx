@@ -6,7 +6,13 @@ const plans = [
     name: 'Free',
     price: '$0',
     period: 'forever',
-    features: ['3 scheduled posts/week', '2 connected platforms', 'Basic analytics'],
+    features: [
+      '3 social accounts',
+      '15 scheduled posts/month',
+      '5 AI rewrites (2 tones)',
+      'Basic content library',
+      'Copy-paste publishing',
+    ],
     cta: 'Get Started',
     ctaLink: '/login',
     highlight: false,
@@ -17,12 +23,13 @@ const plans = [
     period: '/mo',
     badge: 'Most Popular',
     features: [
-      'Unlimited scheduled posts',
-      '5 connected platforms',
-      'AI rewriting',
-      'Content calendar',
+      '10 social accounts',
+      'Unlimited scheduling',
+      '50 AI rewrites/month',
+      'Templates + no watermark',
+      '5 Circle collaborators',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start Creating',
     ctaLink: '/login',
     highlight: true,
   },
@@ -31,12 +38,20 @@ const plans = [
     price: '$24',
     period: '/mo',
     features: [
-      'Everything in Creator',
-      'All 7 platforms',
-      'PostPilot Circles (team)',
+      'Unlimited everything',
+      'All 5 AI tones + video summarizer',
+      'Auto-publish all 7 platforms',
+      'Bulk schedule + evergreen recycling',
+      'A/B testing + content scoring',
+      'Best-time-to-post AI',
+      'Competitor tracking (3 accounts)',
+      '15 Circle collaborators',
+      'Approval workflows + activity log',
+      'Client workspaces (multi-brand)',
+      'Custom branding + white-label reports',
       'Priority support',
     ],
-    cta: 'Start Free Trial',
+    cta: 'Go Pro',
     ctaLink: '/login',
     highlight: false,
   },
@@ -67,11 +82,8 @@ export function PricingPreview() {
           ))}
         </motion.div>
 
-        <a
-          href="/pricing"
-          className="inline-block text-sm font-semibold text-primary hover:underline"
-        >
-          See Full Pricing &rarr;
+        <a href="/pricing" className="inline-block text-sm font-semibold text-primary hover:underline">
+          See Full Pricing Details &rarr;
         </a>
       </div>
     </section>
@@ -82,10 +94,12 @@ function PlanCard({ name, price, period, badge, features, cta, ctaLink, highligh
   return (
     <motion.div
       variants={card}
-      className={`rounded-2xl p-6 space-y-6 text-left relative ${
+      className={`rounded-2xl p-6 space-y-5 text-left relative ${
         highlight
-          ? 'border-2 border-primary bg-card shadow-xl scale-[1.03]'
-          : 'border border-border bg-card'
+          ? 'border-2 border-primary bg-card shadow-xl'
+          : name === 'Pro'
+            ? 'border-2 border-foreground/20 bg-card shadow-lg'
+            : 'border border-border bg-card'
       }`}
     >
       {badge && (
@@ -97,7 +111,7 @@ function PlanCard({ name, price, period, badge, features, cta, ctaLink, highligh
       <div>
         <h3 className="font-bold text-xl font-display">{name}</h3>
         <p className="mt-2">
-          <span className="text-4xl font-extrabold">{price}</span>
+          <span className="text-4xl font-extrabold gradient-text">{price}</span>
           <span className="text-muted-foreground text-sm"> {period}</span>
         </p>
       </div>
@@ -113,10 +127,12 @@ function PlanCard({ name, price, period, badge, features, cta, ctaLink, highligh
 
       <a
         href={ctaLink}
-        className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all ${
+        className={`block text-center py-3 rounded-xl font-bold text-sm transition-all ${
           highlight
             ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:shadow-xl'
-            : 'border border-border hover:bg-muted/50'
+            : name === 'Pro'
+              ? 'bg-foreground text-background hover:opacity-90'
+              : 'border border-border hover:bg-muted/50'
         }`}
       >
         {cta}
