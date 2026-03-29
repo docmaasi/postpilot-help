@@ -82,7 +82,10 @@ export function PricingPreview() {
           ))}
         </motion.div>
 
-        <a href="/pricing" className="inline-block text-sm font-semibold text-primary hover:underline">
+        <a
+          href="/pricing"
+          className="inline-block rounded-full bg-gradient-to-r from-primary to-accent px-10 py-4 text-lg font-bold text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+        >
           See Full Pricing Details &rarr;
         </a>
       </div>
