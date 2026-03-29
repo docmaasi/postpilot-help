@@ -1,64 +1,82 @@
-import { CreditCard } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  CalendarClock,
+  Sparkles,
+  Link2,
+  Youtube,
+  Users,
+} from 'lucide-react';
+import { PlanCard } from '../components/billing/PlanCard.jsx';
+import { UsageMeter } from '../components/billing/UsageMeter.jsx';
+import { ReferralCard } from '../components/billing/ReferralCard.jsx';
+import { PackBalances } from '../components/billing/PackBalances.jsx';
+
+/* Static data — will be replaced with real Convex queries later */
+const CURRENT_PLAN = 'free';
+const PLAN_LIMITS = {
+  free: { name: 'Free', scheduledPosts: 15, aiRewrites: 5, socialAccounts: 3, youtubeImports: 10, circleSlots: 0 },
+  creator: { name: 'Creator', scheduledPosts: -1, aiRewrites: 50, socialAccounts: 10, youtubeImports: -1, circleSlots: 5 },
+  pro: { name: 'Pro', scheduledPosts: -1, aiRewrites: -1, socialAccounts: 100, youtubeImports: -1, circleSlots: 15 },
+};
+
+const USAGE = { scheduledPosts: 8, aiRewrites: 3, socialAccounts: 2, youtubeImports: 4, circleMembers: 0 };
+const PACKS = [
+  { label: 'AI Rewrites', remaining: 12 },
+  { label: 'Scheduled Posts', remaining: 30 },
+];
+const REFERRAL = {
+  code: 'PILOT-A3X9',
+  link: 'https://postpilot.help/r/PILOT-A3X9',
+  stats: { invited: 3, subscribed: 1, credits: 15 },
+};
+
+const limits = PLAN_LIMITS[CURRENT_PLAN];
+
+const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
+const item = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } };
 
 export default function Billing() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Billing & Plans</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your subscription and payment details
+    <div className="mx-auto max-w-4xl space-y-8">
+      {/* Header */}
+      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
+        <h1 className="text-3xl font-bold">Billing & Usage</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Track your plan, usage, packs, and referrals all in one place.
         </p>
-      </div>
+      </motion.div>
 
-      {/* Current plan */}
-      <div className="rounded-xl border border-border bg-card p-6 shadow-subtle">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-            <CreditCard className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Free Plan</h2>
-            <p className="text-sm text-muted-foreground">
-              You are currently on the free tier
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Current Plan */}
+      <PlanCard planKey={CURRENT_PLAN} planName={limits.name} />
 
-      {/* Plan comparison placeholder */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        {['Free', 'Pro', 'Business'].map((plan) => (
-          <div
-            key={plan}
-            className="rounded-xl border border-border bg-card p-6 shadow-subtle"
-          >
-            <h3 className="text-lg font-bold">{plan}</h3>
-            <p className="mt-1 text-2xl font-bold">
-              {plan === 'Free' ? '$0' : plan === 'Pro' ? '$29' : '$79'}
-              <span className="text-sm font-normal text-muted-foreground">
-                /month
-              </span>
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {plan === 'Free'
-                ? 'Get started with basic features'
-                : plan === 'Pro'
-                  ? 'Everything you need to grow'
-                  : 'For power users and teams'}
-            </p>
-            <button
-              className={`mt-4 w-full rounded-lg px-4 py-2 text-sm font-medium ${
-                plan === 'Free'
-                  ? 'border border-border text-muted-foreground'
-                  : 'bg-primary text-primary-foreground hover:bg-primary/90'
-              }`}
-              disabled={plan === 'Free'}
-            >
-              {plan === 'Free' ? 'Current Plan' : 'Upgrade'}
-            </button>
-          </div>
-        ))}
-      </div>
+      {/* Usage Meters */}
+      <section>
+        <h2 className="mb-3 text-lg font-semibold">Usage This Month</h2>
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+        >
+          {[
+            { label: 'Scheduled Posts', used: USAGE.scheduledPosts, limit: limits.scheduledPosts, icon: CalendarClock },
+            { label: 'AI Rewrites', used: USAGE.aiRewrites, limit: limits.aiRewrites, icon: Sparkles },
+            { label: 'Social Accounts', used: USAGE.socialAccounts, limit: limits.socialAccounts, icon: Link2 },
+            { label: 'YouTube Imports', used: USAGE.youtubeImports, limit: limits.youtubeImports, icon: Youtube },
+            { label: 'Circle Members', used: USAGE.circleMembers, limit: limits.circleSlots, icon: Users },
+          ].map((meter) => (
+            <motion.div key={meter.label} variants={item}>
+              <UsageMeter {...meter} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
+
+      {/* Pack Balances */}
+      <PackBalances packs={PACKS} />
+
+      {/* Referral */}
+      <ReferralCard code={REFERRAL.code} link={REFERRAL.link} stats={REFERRAL.stats} />
     </div>
   );
 }

@@ -17,6 +17,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Rocket,
+  Users,
+  Gift,
 } from 'lucide-react';
 import { cn } from '@postpilot/lib';
 
@@ -36,6 +38,7 @@ const NAV_SECTIONS = [
     items: [
       { to: '/templates', icon: Copy, label: 'Templates' },
       { to: '/campaigns', icon: Megaphone, label: 'Campaigns' },
+      { to: '/circles', icon: Users, label: 'Circles' },
     ],
   },
   {
@@ -52,6 +55,7 @@ const NAV_SECTIONS = [
       { to: '/connections', icon: Link2, label: 'Connections' },
       { to: '/pricing', icon: Sparkles, label: 'Pricing' },
       { to: '/billing', icon: CreditCard, label: 'Billing' },
+      { to: '/referrals', icon: Gift, label: 'Referrals' },
       { to: '/settings', icon: Settings, label: 'Settings' },
     ],
   },

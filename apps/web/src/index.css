@@ -168,3 +168,59 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Social media background texture — used on hero sections */
+.social-bg {
+  position: relative;
+  overflow: hidden;
+}
+.social-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 5 L35 15 L30 12 L25 15Z' fill='%237c3aed' fill-opacity='0.03'/%3E%3Ccircle cx='10' cy='40' r='5' fill='none' stroke='%237c3aed' stroke-opacity='0.03' stroke-width='1'/%3E%3Crect x='42' y='35' width='12' height='8' rx='2' fill='%23ec4899' fill-opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.social-bg > * { position: relative; z-index: 1; }
+
+/* Glow card effect */
+.glow-card {
+  transition: box-shadow 0.3s ease;
+}
+.glow-card:hover {
+  box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.15), 0 8px 25px -5px rgb(0 0 0 / 0.08);
+}
+
+/* Gradient border */
+.gradient-border {
+  position: relative;
+  border: none;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Stat card gradient backgrounds */
+.stat-gradient-violet { background: linear-gradient(135deg, hsl(265 65% 55% / 0.08), hsl(265 65% 55% / 0.02)); }
+.stat-gradient-pink { background: linear-gradient(135deg, hsl(330 80% 60% / 0.08), hsl(330 80% 60% / 0.02)); }
+.stat-gradient-blue { background: linear-gradient(135deg, hsl(210 100% 52% / 0.08), hsl(210 100% 52% / 0.02)); }
+.stat-gradient-green { background: linear-gradient(135deg, hsl(152 60% 42% / 0.08), hsl(152 60% 42% / 0.02)); }
+.stat-gradient-orange { background: linear-gradient(135deg, hsl(38 92% 50% / 0.08), hsl(38 92% 50% / 0.02)); }
+
+/* Form input field */
+.input-field {
+  @apply w-full rounded-lg border border-border bg-card px-3 py-2 text-sm outline-none transition-colors
+    placeholder:text-muted-foreground/50
+    focus:border-primary focus:ring-1 focus:ring-primary/30;
+}
