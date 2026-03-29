@@ -7,6 +7,8 @@ import {
   Link2, CreditCard, Gift, Settings, Sparkles, ArrowLeft,
 } from 'lucide-react';
 import { NAV_FEATURE_DETAILS } from './nav-feature-details.js';
+import { platforms } from './platform-data.js';
+import { PlatformModal } from './PlatformModal.jsx';
 
 const FEATURE_GROUPS = [
   {
@@ -50,6 +52,8 @@ const FEATURE_GROUPS = [
 export function LandingNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFeature, setActiveFeature] = useState(null);
+  const [platformsOpen, setPlatformsOpen] = useState(false);
+  const [activePlatform, setActivePlatform] = useState(null);
 
   function handleFeatureClick(name) {
     setActiveFeature(name);
@@ -65,7 +69,39 @@ export function LandingNav() {
 
           <div className="hidden md:flex items-center justify-center flex-1 gap-1">
             <NavPill href="#features">Features</NavPill>
-            <NavPill href="#platforms">Platforms</NavPill>
+            <div className="relative">
+              <button
+                onClick={() => setPlatformsOpen(!platformsOpen)}
+                className="px-4 py-2 text-sm font-semibold text-foreground/60 hover:text-foreground hover:bg-muted rounded-full transition-colors"
+              >
+                Platforms ▾
+              </button>
+              <AnimatePresence>
+                {platformsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[340px] rounded-xl bg-white border border-border shadow-xl overflow-hidden z-50"
+                  >
+                    {platforms.map(({ Icon, name, color, desc }) => (
+                      <button
+                        key={name}
+                        onClick={() => { setPlatformsOpen(false); setActivePlatform(name); }}
+                        className="flex items-start gap-3 w-full px-4 py-3 text-left hover:bg-muted/50 transition-colors border-b border-border/30 last:border-0"
+                      >
+                        <Icon className="h-6 w-6 shrink-0 mt-0.5" style={{ color }} />
+                        <div>
+                          <p className="text-sm font-bold">{name}</p>
+                          <p className="text-xs text-muted-foreground leading-snug">{desc}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <NavPill href="#pricing">Pricing</NavPill>
             <Link to="/blog" className="px-4 py-2 text-sm font-bold text-accent hover:bg-accent/10 rounded-full transition-colors">
               Blog / Resources
@@ -155,6 +191,21 @@ export function LandingNav() {
           />
         )}
       </AnimatePresence>
+
+      {/* Platform detail modal */}
+      <AnimatePresence>
+        {activePlatform && (
+          <PlatformModal
+            platform={platforms.find((p) => p.name === activePlatform)}
+            onClose={() => setActivePlatform(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Close platforms dropdown on outside click */}
+      {platformsOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setPlatformsOpen(false)} />
+      )}
     </>
   );
 }
