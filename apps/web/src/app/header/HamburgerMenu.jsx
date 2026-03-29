@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { forwardRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Youtube, PenSquare, CalendarDays, Image,
@@ -46,16 +46,13 @@ const MENU_SECTIONS = [
   },
 ];
 
-export function HamburgerMenu({ onClose }) {
-  const ref = useRef(null);
+export const HamburgerMenu = forwardRef(function HamburgerMenu({ onClose }, ref) {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) onClose();
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [onClose]);
+  function handleClick(to) {
+    onClose();
+    navigate(to);
+  }
 
   return (
     <motion.div
@@ -80,15 +77,14 @@ export function HamburgerMenu({ onClose }) {
             </p>
             <div className="flex flex-col gap-0.5">
               {section.items.map((item) => (
-                <Link
+                <button
                   key={item.to}
-                  to={item.to}
-                  onClick={onClose}
-                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-sm text-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
+                  onClick={() => handleClick(item.to)}
+                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-left text-sm text-foreground/70 transition-colors hover:bg-muted hover:text-foreground"
                 >
                   <item.icon className="h-4 w-4 text-primary/60" />
                   <span>{item.label}</span>
-                </Link>
+                </button>
               ))}
             </div>
           </div>
@@ -96,4 +92,4 @@ export function HamburgerMenu({ onClose }) {
       </div>
     </motion.div>
   );
-}
+});
