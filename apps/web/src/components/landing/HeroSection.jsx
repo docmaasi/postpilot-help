@@ -18,6 +18,16 @@ export function HeroSection() {
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-accent/10 to-transparent rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto">
+        {/* Centered logo — big and prominent */}
+        <motion.div
+          className="flex justify-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <img src="/logo.png" alt="PostPilot" className="h-36 md:h-48 lg:h-56 w-auto" />
+        </motion.div>
+
         {/* Two-column layout */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left: Content */}
@@ -27,7 +37,6 @@ export function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <img src="/logo.png" alt="PostPilot" className="h-20 md:h-24" />
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display leading-[1.1]">
               Turn One Video Into{' '}
