@@ -5,8 +5,8 @@
 @layer base {
   :root {
     /* PostPilot — Content Creator / Media Studio Vibe */
-    --font-display: 'Space Grotesk', system-ui, sans-serif;
-    --font-body: 'Inter', system-ui, sans-serif;
+    --font-display: 'Sora', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
 
     --radius: 0.75rem;
     --radius-xl: 1rem;
