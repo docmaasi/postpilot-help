@@ -15,7 +15,6 @@ import type * as ai_index from "../ai/index.js";
 import type * as ai_mutations from "../ai/mutations.js";
 import type * as campaigns from "../campaigns.js";
 import type * as collections from "../collections.js";
-import type * as debug from "../debug.js";
 import type * as email_send from "../email/send.js";
 import type * as email_templates from "../email/templates.js";
 import type * as http_callbacks_oauth from "../http/callbacks/oauth.js";
@@ -54,7 +53,6 @@ declare const fullApi: ApiFromModules<{
   "ai/mutations": typeof ai_mutations;
   campaigns: typeof campaigns;
   collections: typeof collections;
-  debug: typeof debug;
   "email/send": typeof email_send;
   "email/templates": typeof email_templates;
   "http/callbacks/oauth": typeof http_callbacks_oauth;

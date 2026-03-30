@@ -2,8 +2,6 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Pencil, Check, X } from 'lucide-react';
 import { useUser } from '@clerk/clerk-react';
-import { useQuery } from 'convex/react';
-import { api } from 'convex/_generated/api';
 import { useVideos, usePosts, useCurrentUser, useUpdateProfile } from '@postpilot/lib';
 import { StatsGrid } from '../components/dashboard/StatsGrid.jsx';
 import { RecentVideos } from '../components/dashboard/RecentVideos.jsx';
@@ -15,9 +13,6 @@ import { ShareButton } from '../components/shared/ShareButton.jsx';
 
 export default function Dashboard() {
   const user = useCurrentUser();
-  const authDebug = useQuery(api.debug.checkAuth);
-  // Temporary: log auth state to console
-  if (authDebug) console.log('Auth debug:', authDebug);
   const { user: clerkUser } = useUser();
   const updateProfile = useUpdateProfile();
   const videos = useVideos();
