@@ -6,11 +6,7 @@ import { InviteForm } from '../components/circles/InviteForm.jsx';
 import { CircleCapacity } from '../components/circles/CircleCapacity.jsx';
 import { RoleExplainer } from '../components/circles/RoleExplainer.jsx';
 
-const MEMBERS = [
-  { id: '1', name: 'Alex Rivera', email: 'alex@studio.co', role: 'editor', status: 'active', joined: '2025-11-12' },
-  { id: '2', name: 'Sam Chen', email: 'sam@creator.io', role: 'contributor', status: 'active', joined: '2025-12-01' },
-  { id: '3', name: 'Jordan Lee', email: 'jordan@example.com', role: 'viewer', status: 'invited', joined: null },
-];
+const MEMBERS = [];
 
 export default function Circles() {
   const [showInvite, setShowInvite] = useState(false);

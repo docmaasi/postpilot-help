@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, UserPlus } from 'lucide-react';
 
 const ROLE_COLORS = {
   contributor: 'bg-blue-500/10 text-blue-500',
@@ -17,7 +17,21 @@ const container = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } 
 const item = { hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } };
 
 export function MemberList({ members }) {
-  if (!members.length) return null;
+  if (!members.length) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-xl border border-dashed border-border bg-card p-10 text-center"
+      >
+        <UserPlus className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
+        <p className="text-sm font-semibold text-foreground">No Circle members yet</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Invite your first collaborator using the button above.
+        </p>
+      </motion.div>
+    );
+  }
 
   const active = members.filter((m) => m.status === 'active');
   const pending = members.filter((m) => m.status === 'invited');

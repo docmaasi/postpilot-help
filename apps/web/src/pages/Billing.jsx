@@ -21,15 +21,12 @@ const PLAN_LIMITS = {
   pro: { name: 'Pro', scheduledPosts: -1, aiRewrites: -1, socialAccounts: 100, youtubeImports: -1, circleSlots: 15 },
 };
 
-const USAGE = { scheduledPosts: 8, aiRewrites: 3, socialAccounts: 2, youtubeImports: 4, circleMembers: 0 };
-const PACKS = [
-  { label: 'AI Rewrites', remaining: 12 },
-  { label: 'Scheduled Posts', remaining: 30 },
-];
+const USAGE = { scheduledPosts: 0, aiRewrites: 0, socialAccounts: 0, youtubeImports: 0, circleMembers: 0 };
+const PACKS = [];
 const REFERRAL = {
-  code: 'PILOT-A3X9',
-  link: 'https://postpilot.help/r/PILOT-A3X9',
-  stats: { invited: 3, subscribed: 1, credits: 15 },
+  code: '',
+  link: '',
+  stats: { invited: 0, subscribed: 0, credits: 0 },
 };
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };

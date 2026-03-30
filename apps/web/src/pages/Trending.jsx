@@ -1,22 +1,7 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link2 } from 'lucide-react';
-import { HashtagCard } from '../components/trending/HashtagCard.jsx';
-import { SAMPLE_HASHTAGS } from '../data/sample-hashtags.js';
-
-const TABS = ['All', 'YouTube', 'Twitter', 'Instagram', 'TikTok', 'LinkedIn'];
 
 export default function Trending() {
-  const [activeTab, setActiveTab] = useState('All');
-
-  const filtered = SAMPLE_HASHTAGS.filter(
-    (h) => activeTab === 'All' || h.platform === activeTab || h.platform === 'All',
-  );
-
-  function handleSave(_id) {
-    window.alert('Saved! (Bookmarking coming soon)');
-  }
-
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       {/* Hero */}
@@ -29,48 +14,24 @@ export default function Trending() {
         </p>
       </motion.div>
 
-      {/* Platform tabs */}
-      <div className="flex flex-wrap gap-2">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeTab === tab
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Hashtag list */}
-      <div className="space-y-3">
-        {filtered.map((h, i) => (
-          <HashtagCard key={h.id} hashtag={h} index={i} onSave={handleSave} />
-        ))}
-      </div>
-
-      {/* Connect prompt */}
+      {/* Empty state */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="gradient-border rounded-xl p-6 text-center"
+        transition={{ delay: 0.1 }}
+        className="gradient-border rounded-xl p-12 text-center"
       >
-        <Link2 className="mx-auto mb-3 h-10 w-10 text-primary/40" />
-        <h3 className="mb-1 text-lg font-semibold">
-          Connect platforms for live trending data
+        <Link2 className="mx-auto mb-4 h-12 w-12 text-primary/40" />
+        <h3 className="mb-2 text-lg font-semibold">
+          Connect your platforms to see trending hashtags
         </h3>
         <p className="mx-auto max-w-md text-sm text-muted-foreground">
-          The hashtags above are sample data. Connect your accounts to see
-          real-time trending topics tailored to your niche.
+          Once you connect your social accounts, you will see real-time trending
+          topics tailored to your niche and audience.
         </p>
         <a
           href="/connections"
-          className="mt-4 inline-block rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="mt-5 inline-block rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Connect Platforms
         </a>

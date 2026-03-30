@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as admin from "../admin.js";
 import type * as ai_generate from "../ai/generate.js";
 import type * as ai_generateExtras from "../ai/generateExtras.js";
 import type * as ai_helpers from "../ai/helpers.js";
@@ -46,6 +47,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
   "ai/generate": typeof ai_generate;
   "ai/generateExtras": typeof ai_generateExtras;
   "ai/helpers": typeof ai_helpers;
