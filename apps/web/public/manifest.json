@@ -1,0 +1,47 @@
+{
+  "name": "PostPilot.Help",
+  "short_name": "PostPilot",
+  "description": "Your Social Media Content Command Center. Turn videos into posts for every platform.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#0f0b1a",
+  "theme_color": "#7C3AED",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["productivity", "social"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/app",
+      "icons": [{ "src": "/logo.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "New Post",
+      "url": "/app/posts/new",
+      "icons": [{ "src": "/logo.png", "sizes": "512x512" }]
+    },
+    {
+      "name": "Calendar",
+      "url": "/app/calendar",
+      "icons": [{ "src": "/logo.png", "sizes": "512x512" }]
+    }
+  ]
+}
