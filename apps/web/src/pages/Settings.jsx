@@ -41,13 +41,11 @@ export default function Settings() {
   async function handleSave() {
     setSaving(true);
     try {
-      await updateProfile({
-        displayName,
-        timezone,
-        theme,
-        defaultPlatforms: platforms,
-        emailNotifications: emailNotifs,
-      });
+      await updateProfile({ displayName, timezone });
+      // Save UI preferences to localStorage (not in DB)
+      localStorage.setItem('pp_theme', theme);
+      localStorage.setItem('pp_platforms', JSON.stringify(platforms));
+      localStorage.setItem('pp_emailNotifs', String(emailNotifs));
     } finally {
       setSaving(false);
     }

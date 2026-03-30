@@ -32,34 +32,14 @@ export const upsert = mutation({
     displayName: v.optional(v.string()),
     email: v.optional(v.string()),
     timezone: v.optional(v.string()),
-    preferences: v.optional(v.object({
-      theme: v.optional(v.string()),
-      defaultPlatforms: v.optional(v.array(v.string())),
-      emailNotifications: v.optional(v.boolean()),
-    })),
-    // Flat convenience fields (wrapped into preferences)
-    theme: v.optional(v.string()),
-    defaultPlatforms: v.optional(v.array(v.string())),
-    emailNotifications: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const identity = await getAuthUser(ctx);
     if (!identity) throw new Error("Not authenticated");
 
     const userId = getUserId(identity);
+    if (!userId) throw new Error("No user ID found");
     const now = Date.now();
-
-    // Build preferences from flat fields or nested object
-    const prefs = args.preferences ?? {};
-    if (args.theme !== undefined) prefs.theme = args.theme;
-    if (args.defaultPlatforms !== undefined) prefs.defaultPlatforms = args.defaultPlatforms;
-    if (args.emailNotifications !== undefined) prefs.emailNotifications = args.emailNotifications;
-
-    const updateData: Record<string, any> = { updatedAt: now };
-    if (args.displayName !== undefined) updateData.displayName = args.displayName;
-    if (args.email !== undefined) updateData.email = args.email;
-    if (args.timezone !== undefined) updateData.timezone = args.timezone;
-    if (Object.keys(prefs).length > 0) updateData.preferences = prefs;
 
     const existing = await ctx.db
       .query("userProfiles")
@@ -67,20 +47,19 @@ export const upsert = mutation({
       .first();
 
     if (existing) {
-      // Merge existing preferences with new ones
-      if (updateData.preferences && existing.preferences) {
-        updateData.preferences = { ...existing.preferences, ...updateData.preferences };
-      }
-      await ctx.db.patch(existing._id, updateData);
+      const patch: Record<string, any> = { updatedAt: now };
+      if (args.displayName !== undefined) patch.displayName = args.displayName;
+      if (args.email !== undefined) patch.email = args.email;
+      if (args.timezone !== undefined) patch.timezone = args.timezone;
+      await ctx.db.patch(existing._id, patch);
       return existing._id;
     }
 
     return await ctx.db.insert("userProfiles", {
       visitorId: userId,
       displayName: args.displayName,
-      email: args.email ?? identity.email ?? undefined,
+      email: args.email,
       timezone: args.timezone,
-      preferences: Object.keys(prefs).length > 0 ? prefs : undefined,
       plan: "free",
       referralCode: generateReferralCode(),
       createdAt: now,
