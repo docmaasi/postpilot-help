@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, Clock, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, User, ExternalLink } from 'lucide-react';
 import { blogPosts } from '../data/blog-posts.js';
 import { CategoryBadge } from '../components/blog/CategoryBadge.jsx';
 import { ShareBar } from '../components/blog/ShareBar.jsx';
@@ -36,6 +36,7 @@ export default function BlogPost() {
       </div>
       <ArticleHeader post={post} />
       <ArticleBody html={post.content} />
+      <SourceAttribution />
       <TagList tags={post.tags} />
       <ShareBar id={post.id} title={post.title} />
       {related.length > 0 && <RelatedArticles posts={related} />}
@@ -116,6 +117,28 @@ function ArticleBody({ html }) {
       className="prose prose-violet max-w-none dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-li:marker:text-primary"
       dangerouslySetInnerHTML={{ __html: html }}
     />
+  );
+}
+
+function SourceAttribution() {
+  return (
+    <div className="rounded-xl border border-border bg-muted/30 p-5">
+      <div className="flex items-center gap-2 text-sm">
+        <ExternalLink className="h-4 w-4 text-primary" />
+        <span className="font-semibold">Source:</span>
+        <a
+          href="https://www.postpilot.help"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary font-medium hover:underline"
+        >
+          www.postpilot.help
+        </a>
+      </div>
+      <p className="mt-1.5 text-xs text-muted-foreground">
+        Originally published on PostPilot.Help — Your Social Media Content Command Center.
+      </p>
+    </div>
   );
 }
 

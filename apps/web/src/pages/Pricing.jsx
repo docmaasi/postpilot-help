@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { Sparkles } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Sparkles, CreditCard } from 'lucide-react';
+import { useLocation, Link } from 'react-router-dom';
 import { PlanCards } from '../components/pricing/PlanCard.jsx';
 import { PackCards } from '../components/pricing/PackCard.jsx';
 import { CirclesExplainer } from '../components/pricing/CirclesExplainer.jsx';
@@ -34,7 +34,21 @@ export default function Pricing() {
           Start free. Upgrade when you&apos;re ready to unlock more power,
           more accounts, and team collaboration.
         </p>
-        <div className="mt-4 flex justify-center">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            to={isInsideApp ? '/app' : '/login'}
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-bold text-white shadow-lg hover:opacity-90 transition-opacity"
+          >
+            <Sparkles className="h-4 w-4" />
+            Try Free
+          </Link>
+          <Link
+            to={isInsideApp ? '/app/billing' : '/login'}
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-6 py-3 text-sm font-bold hover:bg-muted transition-colors"
+          >
+            <CreditCard className="h-4 w-4" />
+            Subscriptions
+          </Link>
           <ShareButton
             title="PostPilot Pricing — Simple, transparent pricing"
             description="Check out PostPilot's pricing plans. Start free and upgrade when you're ready."
