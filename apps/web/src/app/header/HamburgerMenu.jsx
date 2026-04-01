@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   LayoutDashboard, Youtube, PenSquare, CalendarDays, Image,
   Copy, Megaphone, Users, BarChart3, MessageCircle, TrendingUp,
-  Link2, CreditCard, Gift, Settings,
+  Link2, CreditCard, Gift, Settings, Sparkles,
 } from 'lucide-react';
 
 const MENU_SECTIONS = [
@@ -37,6 +37,7 @@ const MENU_SECTIONS = [
   {
     title: 'Account',
     items: [
+      { to: '/app/pricing', icon: Sparkles, label: 'Plans & Pricing' },
       { to: '/app/connections', icon: Link2, label: 'Connections' },
       { to: '/app/billing', icon: CreditCard, label: 'Billing' },
       { to: '/app/referrals', icon: Gift, label: 'Referrals' },

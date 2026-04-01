@@ -134,7 +134,7 @@ function PlanCard({ plan, index }) {
 
   async function handleUpgrade() {
     if (key === 'free') {
-      navigate('/login');
+      navigate(isAuthenticated ? '/app' : '/login');
       return;
     }
 

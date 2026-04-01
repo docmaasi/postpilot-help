@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { PlanCards } from '../components/pricing/PlanCard.jsx';
 import { PackCards } from '../components/pricing/PackCard.jsx';
 import { CirclesExplainer } from '../components/pricing/CirclesExplainer.jsx';
@@ -7,10 +8,13 @@ import { ShareButton } from '../components/shared/ShareButton.jsx';
 import { LandingNav } from '../components/landing/LandingNav.jsx';
 
 export default function Pricing() {
+  const location = useLocation();
+  const isInsideApp = location.pathname.startsWith('/app');
+
   return (
-    <div className="min-h-screen bg-background">
-      <LandingNav />
-      <div className="space-y-12 pb-12 pt-24">
+    <div className={isInsideApp ? 'bg-background' : 'min-h-screen bg-background'}>
+      {!isInsideApp && <LandingNav />}
+      <div className={`space-y-12 pb-12 ${isInsideApp ? 'pt-0' : 'pt-24'}`}>
       {/* Hero header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
