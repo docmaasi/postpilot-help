@@ -69,7 +69,7 @@ export const HamburgerMenu = forwardRef(function HamburgerMenu({ onClose }, ref)
       </div>
 
       {/* Menu grid */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-5 p-5">
+      <div className="grid grid-cols-1 gap-y-4 p-5 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-5">
         {MENU_SECTIONS.map((section) => (
           <div key={section.title}>
             <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">

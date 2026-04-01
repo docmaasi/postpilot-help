@@ -15,7 +15,7 @@ export function PlanCard({ planKey, planName, status = 'active' }) {
       animate={{ opacity: 1, y: 0 }}
       className="gradient-border rounded-2xl bg-card p-6 glow-card"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
             <Icon className="h-6 w-6 text-primary" />

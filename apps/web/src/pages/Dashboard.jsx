@@ -62,7 +62,7 @@ export default function Dashboard() {
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-start justify-between"
+        className="flex flex-wrap items-start justify-between gap-3"
       >
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2 flex-wrap">

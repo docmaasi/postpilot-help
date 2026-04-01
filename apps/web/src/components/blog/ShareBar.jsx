@@ -21,7 +21,7 @@ export function ShareBar({ id, title }) {
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
 
   return (
-    <div className="flex items-center gap-3 border-t border-border pt-6">
+    <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
       <span className="flex items-center gap-1 text-sm font-medium">
         <Share2 className="h-4 w-4" /> Share this article
       </span>

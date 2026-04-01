@@ -53,8 +53,8 @@ export function AppHeader({ onMenuClick }) {
         <LayoutGrid className="h-5 w-5 text-muted-foreground" />
       </button>
 
-      {/* Search */}
-      <div className="flex flex-1 items-center gap-2">
+      {/* Search — hidden on small screens to prevent crowding */}
+      <div className="hidden sm:flex flex-1 items-center gap-2">
         <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
@@ -64,6 +64,7 @@ export function AppHeader({ onMenuClick }) {
           />
         </div>
       </div>
+      <div className="flex-1 sm:hidden" />
 
       {/* Right side */}
       <div className="flex items-center gap-3">

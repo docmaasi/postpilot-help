@@ -7,9 +7,9 @@ export default function Login() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background">
       {/* Gradient blobs */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-violet-600/15 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-pink-500/15 to-transparent rounded-full blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-primary/5 via-accent/5 to-orange-400/5 rounded-full blur-3xl" />
+      <div className="absolute top-0 right-0 w-[80vw] sm:w-[500px] h-[80vw] sm:h-[500px] bg-gradient-to-bl from-violet-600/15 to-transparent rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-[70vw] sm:w-[400px] h-[70vw] sm:h-[400px] bg-gradient-to-tr from-pink-500/15 to-transparent rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] sm:w-[600px] h-[90vw] sm:h-[600px] bg-gradient-to-r from-primary/5 via-accent/5 to-orange-400/5 rounded-full blur-3xl" />
 
       {/* Floating social icons */}
       <FloatingSocialBg density="medium" />

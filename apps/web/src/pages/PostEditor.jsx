@@ -187,14 +187,14 @@ function Header({ isEditing, saving, onBack, onSaveDraft, onSchedule }) {
         </h1>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={onSaveDraft}
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-50"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Save Draft
+          <span className="hidden sm:inline">Save</span> Draft
         </button>
         <button
           onClick={onSchedule}
