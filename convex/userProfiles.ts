@@ -62,11 +62,17 @@ export const upsert = mutation({
       if (args.displayName !== undefined) patch.displayName = args.displayName;
       if (args.email !== undefined) patch.email = args.email;
       if (args.timezone !== undefined) patch.timezone = args.timezone;
+      // Ensure admin emails always have Pro access in the database
+      const effectiveEmail = args.email || existing.email || identity.email;
+      if (isAdminEmail(effectiveEmail) && existing.plan !== "pro") {
+        patch.plan = "pro";
+      }
       await ctx.db.patch(existing._id, patch);
       return existing._id;
     }
 
-    const initialPlan = isAdminEmail(args.email) ? "pro" : "free";
+    const effectiveEmail = args.email || identity.email;
+    const initialPlan = isAdminEmail(effectiveEmail) ? "pro" : "free";
     return await ctx.db.insert("userProfiles", {
       visitorId: userId,
       displayName: args.displayName,
