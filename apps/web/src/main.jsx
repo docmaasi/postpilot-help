@@ -21,7 +21,12 @@ if (!clerkPubKey) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ErrorBoundary>
-      <ClerkProvider publishableKey={clerkPubKey}>
+      <ClerkProvider
+        publishableKey={clerkPubKey}
+        afterSignOutUrl="/"
+        signInUrl="/login"
+        signUpUrl="/signup"
+      >
         <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <QueryClientProvider client={queryClientInstance}>
             <App />

@@ -14,6 +14,7 @@ const Privacy = React.lazy(() => import('./pages/legal/Privacy.jsx'));
 const Cookies = React.lazy(() => import('./pages/legal/Cookies.jsx'));
 const Contact = React.lazy(() => import('./pages/legal/Contact.jsx'));
 const LoginPage = React.lazy(() => import('./pages/Login.jsx'));
+const SignUpPage = React.lazy(() => import('./pages/SignUp.jsx'));
 
 // Lazy-loaded protected pages
 const Dashboard = React.lazy(() => import('./pages/Dashboard.jsx'));
@@ -54,6 +55,7 @@ export function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
           {/* Protected app routes — require auth */}
           <Route path="/app" element={<ProtectedLayout />}>
