@@ -30,6 +30,20 @@ export const getById = query({
   },
 });
 
+export const getMembers = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, { workspaceId }) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) return [];
+
+    return await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_workspaceId", (q) => q.eq("workspaceId", workspaceId))
+      .filter((q) => q.neq(q.field("status"), "removed"))
+      .collect();
+  },
+});
+
 // ── Mutations ────────────────────────────────────────
 
 export const create = mutation({

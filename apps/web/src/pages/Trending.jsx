@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Trending() {
   return (
@@ -29,12 +30,12 @@ export default function Trending() {
           Once you connect your social accounts, you will see real-time trending
           topics tailored to your niche and audience.
         </p>
-        <a
-          href="/connections"
+        <Link
+          to="/app/connections"
           className="mt-5 inline-block rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Connect Platforms
-        </a>
+        </Link>
       </motion.div>
     </div>
   );

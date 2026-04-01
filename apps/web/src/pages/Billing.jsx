@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   CalendarClock,
@@ -21,26 +21,36 @@ const PLAN_LIMITS = {
   pro: { name: 'Pro', scheduledPosts: -1, aiRewrites: -1, socialAccounts: 100, youtubeImports: -1, circleSlots: 15 },
 };
 
-const USAGE = { scheduledPosts: 0, aiRewrites: 0, socialAccounts: 0, youtubeImports: 0, circleMembers: 0 };
-const PACKS = [];
-const REFERRAL = {
-  code: '',
-  link: '',
-  stats: { invited: 0, subscribed: 0, credits: 0 },
-};
-
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } };
 const item = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } };
 
 export default function Billing() {
   const profile = useQuery(api.userProfiles.getCurrent);
   const subscription = useQuery(api.payments.subscriptions.getCurrent);
+  const usageLimits = useQuery(api.payments.subscriptions.getUsage);
   const createPortal = useAction(api.payments.stripe.createCustomerPortalSession);
   const [portalLoading, setPortalLoading] = useState(false);
 
   const currentPlan = profile?.plan ?? 'free';
   const limits = PLAN_LIMITS[currentPlan] ?? PLAN_LIMITS.free;
   const subStatus = subscription?.status ?? 'active';
+
+  // Build usage from real data (usageLimits is an array of {feature, used, limit})
+  const usage = useMemo(() => {
+    const map = { scheduledPosts: 0, aiRewrites: 0, socialAccounts: 0, youtubeImports: 0, circleMembers: 0 };
+    if (!usageLimits) return map;
+    for (const entry of usageLimits) {
+      if (entry.feature === 'scheduledPosts') map.scheduledPosts = entry.used;
+      if (entry.feature === 'aiRewrites') map.aiRewrites = entry.used;
+      if (entry.feature === 'socialAccounts') map.socialAccounts = entry.used;
+      if (entry.feature === 'youtubeImports') map.youtubeImports = entry.used;
+      if (entry.feature === 'circleMembers') map.circleMembers = entry.used;
+    }
+    return map;
+  }, [usageLimits]);
+
+  const referralCode = profile?.referralCode ?? '';
+  const referralLink = referralCode ? `https://postpilot.help/r/${referralCode}` : '';
 
   async function handleManageSubscription() {
     setPortalLoading(true);
@@ -93,11 +103,11 @@ export default function Billing() {
           className="grid grid-cols-1 gap-3 sm:grid-cols-2"
         >
           {[
-            { label: 'Scheduled Posts', used: USAGE.scheduledPosts, limit: limits.scheduledPosts, icon: CalendarClock },
-            { label: 'AI Rewrites', used: USAGE.aiRewrites, limit: limits.aiRewrites, icon: Sparkles },
-            { label: 'Social Accounts', used: USAGE.socialAccounts, limit: limits.socialAccounts, icon: Link2 },
-            { label: 'YouTube Imports', used: USAGE.youtubeImports, limit: limits.youtubeImports, icon: Youtube },
-            { label: 'Circle Members', used: USAGE.circleMembers, limit: limits.circleSlots, icon: Users },
+            { label: 'Scheduled Posts', used: usage.scheduledPosts, limit: limits.scheduledPosts, icon: CalendarClock },
+            { label: 'AI Rewrites', used: usage.aiRewrites, limit: limits.aiRewrites, icon: Sparkles },
+            { label: 'Social Accounts', used: usage.socialAccounts, limit: limits.socialAccounts, icon: Link2 },
+            { label: 'YouTube Imports', used: usage.youtubeImports, limit: limits.youtubeImports, icon: Youtube },
+            { label: 'Circle Members', used: usage.circleMembers, limit: limits.circleSlots, icon: Users },
           ].map((meter) => (
             <motion.div key={meter.label} variants={item}>
               <UsageMeter {...meter} />
@@ -107,10 +117,10 @@ export default function Billing() {
       </section>
 
       {/* Pack Balances */}
-      <PackBalances packs={PACKS} />
+      <PackBalances packs={[]} />
 
       {/* Referral */}
-      <ReferralCard code={REFERRAL.code} link={REFERRAL.link} stats={REFERRAL.stats} />
+      <ReferralCard code={referralCode} link={referralLink} stats={{ invited: 0, subscribed: 0, credits: 0 }} />
     </div>
   );
 }

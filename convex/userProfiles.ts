@@ -1,6 +1,7 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUser, getUserId } from "./lib/auth";
+import { isAdminEmail } from "./lib/admin-emails";
 
 function generateReferralCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
@@ -20,10 +21,20 @@ export const getCurrent = query({
     const userId = getUserId(identity);
     if (!userId) return null;
 
-    return await ctx.db
+    const profile = await ctx.db
       .query("userProfiles")
       .withIndex("by_visitorId", (q) => q.eq("visitorId", userId))
       .first();
+
+    if (!profile) return null;
+
+    // Admin emails always get Pro access
+    const email = profile.email || identity.email;
+    if (isAdminEmail(email) && profile.plan !== "pro") {
+      return { ...profile, plan: "pro" };
+    }
+
+    return profile;
   },
 });
 
@@ -55,12 +66,13 @@ export const upsert = mutation({
       return existing._id;
     }
 
+    const initialPlan = isAdminEmail(args.email) ? "pro" : "free";
     return await ctx.db.insert("userProfiles", {
       visitorId: userId,
       displayName: args.displayName,
       email: args.email,
       timezone: args.timezone,
-      plan: "free",
+      plan: initialPlan,
       referralCode: generateReferralCode(),
       createdAt: now,
       updatedAt: now,

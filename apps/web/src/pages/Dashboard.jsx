@@ -10,6 +10,7 @@ import { DraftPosts } from '../components/dashboard/DraftPosts.jsx';
 import { PlatformStatus } from '../components/dashboard/PlatformStatus.jsx';
 import { FloatingSocialBg } from '../components/shared/FloatingSocialBg.jsx';
 import { ShareButton } from '../components/shared/ShareButton.jsx';
+import { WelcomeModal } from '../components/shared/WelcomeModal.jsx';
 
 export default function Dashboard() {
   const user = useCurrentUser();
@@ -55,6 +56,7 @@ export default function Dashboard() {
 
   return (
     <div className="relative mx-auto max-w-6xl space-y-6">
+      <WelcomeModal userName={displayName} />
       <FloatingSocialBg density="light" />
 
       <motion.div

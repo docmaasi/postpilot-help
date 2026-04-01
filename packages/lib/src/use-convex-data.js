@@ -124,6 +124,27 @@ export function useDeleteCollection() {
   return useMutation(api.collections.remove);
 }
 
+// ─── Workspaces (Circles) ───────────────────────────
+export function useWorkspace() {
+  return useQuery(api.workspaces.getByOwner);
+}
+
+export function useWorkspaceMembers(workspaceId) {
+  return useQuery(api.workspaces.getMembers, workspaceId ? { workspaceId } : 'skip');
+}
+
+export function useCreateWorkspace() {
+  return useMutation(api.workspaces.create);
+}
+
+export function useAddMember() {
+  return useMutation(api.workspaces.addMember);
+}
+
+export function useRemoveMember() {
+  return useMutation(api.workspaces.removeMember);
+}
+
 // ─── Publishing / OAuth ─────────────────────────────
 export function useConnectionStatus() {
   return useQuery(api.publishing.oauthHelpers.getConnectionStatus);

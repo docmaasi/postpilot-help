@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { AnalyticsStats } from '../components/analytics/AnalyticsStats.jsx';
 import { PlatformBarChart } from '../components/analytics/PlatformBarChart.jsx';
 import { ActivityGrid } from '../components/analytics/ActivityGrid.jsx';
@@ -43,12 +44,12 @@ export default function Analytics() {
           The data above is sample data. Connect your social accounts to see real
           engagement metrics, reach, and performance insights.
         </p>
-        <a
-          href="/connections"
+        <Link
+          to="/app/connections"
           className="mt-4 inline-block rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Connect Platforms
-        </a>
+        </Link>
       </motion.div>
     </div>
   );

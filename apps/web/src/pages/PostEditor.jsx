@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Save, CalendarClock, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, CalendarClock, Loader2, Clock } from 'lucide-react';
 import { usePost, useCreatePost, useUpdatePost } from '@postpilot/lib';
 import { PLATFORM_ORDER } from '@/lib/platforms.js';
 import { PlatformTabs } from '../components/editor/PlatformTabs.jsx';
@@ -21,6 +21,9 @@ export default function PostEditor() {
   const [contentMap, setContentMap] = useState({});
   const [hashtagMap, setHashtagMap] = useState({});
   const [saving, setSaving] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState('');
+  const [showSchedulePicker, setShowSchedulePicker] = useState(false);
+  const dateInputRef = useRef(null);
 
   /** Get content for the active platform */
   const content = contentMap[platform] ?? existingPost?.content ?? '';
@@ -38,6 +41,10 @@ export default function PostEditor() {
 
   /** Save as draft or schedule */
   async function handleSave(status = 'draft') {
+    if (status === 'scheduled' && !scheduledAt) {
+      setShowSchedulePicker(true);
+      return;
+    }
     setSaving(true);
     try {
       const payload = {
@@ -45,6 +52,9 @@ export default function PostEditor() {
         content,
         hashtags,
         status,
+        ...(status === 'scheduled' && scheduledAt
+          ? { scheduledAt: new Date(scheduledAt).getTime() }
+          : {}),
       };
       if (isEditing) {
         await updatePost({ id, ...payload });
@@ -59,6 +69,12 @@ export default function PostEditor() {
     }
   }
 
+  function confirmSchedule() {
+    if (scheduledAt) {
+      handleSave('scheduled');
+    }
+  }
+
   return (
     <div className="mx-auto max-w-6xl space-y-5">
       {/* Header */}
@@ -69,6 +85,40 @@ export default function PostEditor() {
         onSaveDraft={() => handleSave('draft')}
         onSchedule={() => handleSave('scheduled')}
       />
+
+      {/* Schedule date/time picker */}
+      {showSchedulePicker && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="flex flex-wrap items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4"
+        >
+          <Clock className="h-5 w-5 text-primary" />
+          <span className="text-sm font-medium">Schedule for:</span>
+          <input
+            ref={dateInputRef}
+            type="datetime-local"
+            value={scheduledAt}
+            onChange={(e) => setScheduledAt(e.target.value)}
+            min={new Date().toISOString().slice(0, 16)}
+            className="rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          />
+          <button
+            onClick={confirmSchedule}
+            disabled={!scheduledAt || saving}
+            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          >
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CalendarClock className="h-4 w-4" />}
+            Confirm Schedule
+          </button>
+          <button
+            onClick={() => setShowSchedulePicker(false)}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </button>
+        </motion.div>
+      )}
 
       {/* Platform tabs */}
       <div className="rounded-xl border border-border bg-card/60 px-2 py-1 shadow-subtle glass">

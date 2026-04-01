@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Comments() {
   return (
@@ -29,12 +30,12 @@ export default function Comments() {
           Once you connect your social accounts, your comments will appear here
           with AI-powered sentiment analysis so you can reply faster.
         </p>
-        <a
-          href="/connections"
+        <Link
+          to="/app/connections"
           className="mt-5 inline-block rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Connect Platforms
-        </a>
+        </Link>
       </motion.div>
     </div>
   );

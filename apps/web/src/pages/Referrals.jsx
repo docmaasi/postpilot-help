@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Gift, Copy, Check, Twitter, Mail, Share2, Shield } from 'lucide-react';
+import { useCurrentUser } from '@postpilot/lib';
 import { ReferralHistory } from '../components/referrals/ReferralHistory.jsx';
 import { HowItWorks } from '../components/referrals/HowItWorks.jsx';
 import { RewardBreakdown } from '../components/referrals/RewardBreakdown.jsx';
 import { ShareButton } from '../components/shared/ShareButton.jsx';
 
-const REFERRAL_CODE = 'PILOT-A3X9';
-const REFERRAL_LINK = 'https://postpilot.help/r/PILOT-A3X9';
-
 export default function Referrals() {
+  const profile = useCurrentUser();
+  const REFERRAL_CODE = profile?.referralCode ?? '';
+  const REFERRAL_LINK = REFERRAL_CODE ? `https://postpilot.help/r/${REFERRAL_CODE}` : '';
   const [copied, setCopied] = useState(null);
 
   const handleCopy = (text, key) => {

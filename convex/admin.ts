@@ -17,7 +17,7 @@ export const setUserPlan = internalMutation({
     if (args.visitorId) {
       profile = await ctx.db
         .query("userProfiles")
-        .withIndex("by_visitorId", (q) => q.eq("visitorId", args.visitorId))
+        .withIndex("by_visitorId", (q) => q.eq("visitorId", args.visitorId!))
         .first();
     }
 

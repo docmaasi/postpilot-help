@@ -46,7 +46,7 @@ export default function VideoDetail() {
       </div>
 
       <RepurposeSection videoId={id} />
-      <LinkedPosts youtubeVideoId={video.youtubeVideoId} />
+      <LinkedPosts youtubeVideoId={video._id} />
 
       {/* Notes */}
       <motion.div

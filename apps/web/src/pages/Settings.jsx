@@ -20,13 +20,21 @@ export default function Settings() {
   const [timezone, setTimezone] = useState(
     profile?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
   );
-  const [theme, setTheme] = useState(profile?.theme ?? 'system');
-  const [platforms, setPlatforms] = useState(
-    profile?.defaultPlatforms ?? [...PLATFORM_ORDER],
+  const [theme, setTheme] = useState(
+    localStorage.getItem('pp_theme') ?? profile?.preferences?.theme ?? 'system',
   );
-  const [emailNotifs, setEmailNotifs] = useState(
-    profile?.emailNotifications ?? true,
-  );
+  const [platforms, setPlatforms] = useState(() => {
+    const stored = localStorage.getItem('pp_platforms');
+    if (stored) {
+      try { return JSON.parse(stored); } catch { /* fall through */ }
+    }
+    return profile?.preferences?.defaultPlatforms ?? [...PLATFORM_ORDER];
+  });
+  const [emailNotifs, setEmailNotifs] = useState(() => {
+    const stored = localStorage.getItem('pp_emailNotifs');
+    if (stored !== null) return stored === 'true';
+    return profile?.preferences?.emailNotifications ?? true;
+  });
   const [saving, setSaving] = useState(false);
 
   const email =

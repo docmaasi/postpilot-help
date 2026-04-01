@@ -19,7 +19,9 @@ import {
   Users,
   Gift,
   Sparkles,
+  LogOut,
 } from 'lucide-react';
+import { useClerk } from '@clerk/clerk-react';
 import { cn } from '@postpilot/lib';
 
 const NAV_SECTIONS = [
@@ -63,6 +65,7 @@ const NAV_SECTIONS = [
 
 export function Sidebar({ isOpen, onToggle, isMobile = false }) {
   const location = useLocation();
+  const { signOut } = useClerk();
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
@@ -121,6 +124,21 @@ export function Sidebar({ isOpen, onToggle, isMobile = false }) {
           </div>
         ))}
       </nav>
+
+      {/* Log out button */}
+      <div className="border-t border-sidebar-border px-3 pt-3">
+        <button
+          onClick={() => signOut({ redirectUrl: '/' })}
+          className={cn(
+            'group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+            'text-sidebar-foreground/70 hover:bg-red-500/10 hover:text-red-500'
+          )}
+          title={!isOpen ? 'Log Out' : undefined}
+        >
+          <LogOut className="h-4 w-4 shrink-0 text-sidebar-foreground/50 group-hover:text-red-500" />
+          {isOpen && <span>Log Out</span>}
+        </button>
+      </div>
 
       {/* Collapse toggle (desktop only) */}
       {!isMobile && (

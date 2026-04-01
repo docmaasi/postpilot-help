@@ -1,19 +1,25 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
+import { useCurrentUser, useWorkspace, useWorkspaceMembers } from '@postpilot/lib';
 import { MemberList } from '../components/circles/MemberList.jsx';
 import { InviteForm } from '../components/circles/InviteForm.jsx';
 import { CircleCapacity } from '../components/circles/CircleCapacity.jsx';
 import { RoleExplainer } from '../components/circles/RoleExplainer.jsx';
 
-const MEMBERS = [];
+const PLAN_CIRCLE_SLOTS = { free: 0, creator: 5, pro: 15 };
 
 export default function Circles() {
+  const profile = useCurrentUser();
+  const workspace = useWorkspace();
+  const members = useWorkspaceMembers(workspace?._id);
   const [showInvite, setShowInvite] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
 
+  const MEMBERS = members ?? [];
   const activeCount = MEMBERS.filter((m) => m.status === 'active').length;
-  const maxSlots = 5;
+  const currentPlan = profile?.plan ?? 'free';
+  const maxSlots = PLAN_CIRCLE_SLOTS[currentPlan] ?? 0;
 
   return (
     <div className="mx-auto max-w-4xl space-y-8">
