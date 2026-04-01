@@ -30,6 +30,14 @@ export default function SignUpPage() {
           <p className="text-sm text-muted-foreground">
             Start turning videos into viral posts — free
           </p>
+          <p className="max-w-sm text-center text-xs leading-relaxed text-muted-foreground/80">
+            You're one step away from transforming how you create content.
+            PostPilot turns a single video into scroll-stopping posts
+            for every platform — powered by AI, built for creators like
+            you. No more burnout, no more guesswork. Sign up free,
+            connect your accounts, and watch your content work harder
+            than ever. Your growth story starts right here.
+          </p>
         </div>
 
         {/* Clerk SignUp */}

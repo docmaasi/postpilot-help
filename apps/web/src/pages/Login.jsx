@@ -30,6 +30,13 @@ export default function Login() {
           <p className="text-sm text-muted-foreground">
             Your social media command center
           </p>
+          <p className="max-w-sm text-center text-xs leading-relaxed text-muted-foreground/80">
+            Great to see you again! Your content calendar, scheduled posts,
+            and AI tools are right where you left them. Jump back in
+            and keep building momentum — consistency is what separates
+            creators who grow from creators who stall. Your audience
+            is waiting. Let's make today count.
+          </p>
         </div>
 
         {/* Clerk SignIn */}
