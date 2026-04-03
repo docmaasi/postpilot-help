@@ -1,5 +1,41 @@
-import { internalMutation } from "../_generated/server";
+import { internalMutation, query } from "../_generated/server";
 import { v } from "convex/values";
+import { getAuthUser, getUserId } from "../lib/auth";
+
+// ── Get pack balances for current user ──────────────
+export const getBalances = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) return [];
+
+    const userId = getUserId(identity);
+    const balance = await ctx.db
+      .query("packBalances")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!balance) return [];
+
+    const items: { label: string; remaining: number }[] = [];
+    if (balance.aiRewrites > 0) {
+      items.push({ label: "AI Rewrites", remaining: balance.aiRewrites });
+    }
+    if (balance.scheduledPosts > 0) {
+      items.push({ label: "Scheduled Posts", remaining: balance.scheduledPosts });
+    }
+    if (balance.circleSlots > 0) {
+      items.push({ label: "Circle Slots", remaining: balance.circleSlots });
+    }
+    if (balance.analyticsUnlocked) {
+      items.push({ label: "Analytics", remaining: 1 });
+    }
+    if (balance.viralTemplatesUnlocked) {
+      items.push({ label: "Viral Templates", remaining: 1 });
+    }
+    return items;
+  },
+});
 
 // ── Pack credit mapping ─────────────────────────────
 

@@ -46,7 +46,12 @@ export const list = query({
 export const getById = query({
   args: { id: v.id("youtubeVideos") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const identity = await getAuthUser(ctx);
+    if (!identity) return null;
+
+    const video = await ctx.db.get(args.id);
+    if (!video || video.userId !== getUserId(identity)) return null;
+    return video;
   },
 });
 
@@ -98,6 +103,14 @@ export const update = mutation({
     )),
   },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const video = await ctx.db.get(args.id);
+    if (!video || video.userId !== getUserId(identity)) {
+      throw new Error("Video not found");
+    }
+
     const { id, ...updates } = args;
     await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
   },
@@ -106,6 +119,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("youtubeVideos") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const video = await ctx.db.get(args.id);
+    if (!video || video.userId !== getUserId(identity)) {
+      throw new Error("Video not found");
+    }
+
     await ctx.db.patch(args.id, {
       isArchived: true,
       updatedAt: Date.now(),

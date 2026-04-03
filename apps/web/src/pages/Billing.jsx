@@ -9,7 +9,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useQuery, useAction } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
+import { api } from 'convex/_generated/api';
 import { PlanCard } from '../components/billing/PlanCard.jsx';
 import { UsageMeter } from '../components/billing/UsageMeter.jsx';
 import { ReferralCard } from '../components/billing/ReferralCard.jsx';
@@ -28,6 +28,7 @@ export default function Billing() {
   const profile = useQuery(api.userProfiles.getCurrent);
   const subscription = useQuery(api.payments.subscriptions.getCurrent);
   const usageLimits = useQuery(api.payments.subscriptions.getUsage);
+  const packBalances = useQuery(api.payments.packs.getBalances);
   const createPortal = useAction(api.payments.stripe.createCustomerPortalSession);
   const [portalLoading, setPortalLoading] = useState(false);
 
@@ -117,7 +118,7 @@ export default function Billing() {
       </section>
 
       {/* Pack Balances */}
-      <PackBalances packs={[]} />
+      <PackBalances packs={packBalances ?? []} />
 
       {/* Referral */}
       <ReferralCard code={referralCode} link={referralLink} stats={{ invited: 0, subscribed: 0, credits: 0 }} />

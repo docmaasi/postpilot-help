@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Save, CalendarClock, Loader2, Clock } from 'lucide-react';
@@ -17,9 +17,24 @@ export default function PostEditor() {
   const updatePost = useUpdatePost();
 
   const isEditing = !!id;
-  const [platform, setPlatform] = useState(existingPost?.platform ?? PLATFORM_ORDER[0]);
+  const [platform, setPlatform] = useState(PLATFORM_ORDER[0]);
   const [contentMap, setContentMap] = useState({});
   const [hashtagMap, setHashtagMap] = useState({});
+
+  // Sync platform and content from existing post once it loads
+  useEffect(() => {
+    if (existingPost?.platform) {
+      setPlatform(existingPost.platform);
+      setContentMap((prev) => {
+        if (prev[existingPost.platform] !== undefined) return prev;
+        return { ...prev, [existingPost.platform]: existingPost.content ?? '' };
+      });
+      setHashtagMap((prev) => {
+        if (prev[existingPost.platform] !== undefined) return prev;
+        return { ...prev, [existingPost.platform]: existingPost.hashtags ?? [] };
+      });
+    }
+  }, [existingPost?.platform, existingPost?.content, existingPost?.hashtags]);
   const [saving, setSaving] = useState(false);
   const [scheduledAt, setScheduledAt] = useState('');
   const [showSchedulePicker, setShowSchedulePicker] = useState(false);

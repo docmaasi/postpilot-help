@@ -4,7 +4,7 @@
 
 export const platformInfoPart1 = [
   {
-    key: 'youtube',
+    key: 'youtube_community',
     name: 'YouTube',
     tagline: 'The world\'s largest video platform and second-largest search engine',
     monthlyUsers: '2.5B+',

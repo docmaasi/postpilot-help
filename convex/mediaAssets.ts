@@ -83,8 +83,15 @@ export const create = mutation({
 export const remove = mutation({
   args: { id: v.id("mediaAssets") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
     const asset = await ctx.db.get(args.id);
-    if (asset?.storageId) {
+    if (!asset || asset.userId !== getUserId(identity)) {
+      throw new Error("Asset not found");
+    }
+
+    if (asset.storageId) {
       await ctx.storage.delete(asset.storageId);
     }
     await ctx.db.delete(args.id);

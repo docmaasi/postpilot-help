@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useUser } from '@clerk/clerk-react';
 import { useCurrentUser, useUpdateProfile } from '@postpilot/lib';
@@ -36,6 +36,20 @@ export default function Settings() {
     return profile?.preferences?.emailNotifications ?? true;
   });
   const [saving, setSaving] = useState(false);
+
+  // Sync state from profile once it loads from Convex
+  useEffect(() => {
+    if (profile) {
+      setDisplayName(profile.displayName ?? clerkUser?.fullName ?? '');
+      setTimezone(profile.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone);
+      if (profile.preferences?.defaultPlatforms) {
+        setPlatforms(profile.preferences.defaultPlatforms);
+      }
+      if (profile.preferences?.emailNotifications !== undefined) {
+        setEmailNotifs(profile.preferences.emailNotifications);
+      }
+    }
+  }, [profile, clerkUser?.fullName]);
 
   const email =
     clerkUser?.primaryEmailAddress?.emailAddress ?? profile?.email ?? '';

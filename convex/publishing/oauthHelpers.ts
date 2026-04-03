@@ -35,16 +35,14 @@ export const updateTokens = internalMutation({
 // ─── Store connection (internal) ────────────────────
 export const storeConnection = internalMutation({
   args: {
+    userId: v.string(),
     platform: v.string(),
     accessToken: v.string(),
     refreshToken: v.string(),
     expiresIn: v.number(),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Not authenticated");
-
-    const userId = identity.subject;
+    const userId = args.userId;
     const now = Date.now();
 
     const existing = await ctx.db
@@ -80,7 +78,14 @@ export const storeConnection = internalMutation({
 export const disconnect = mutation({
   args: { connectionId: v.id("platformConnections") },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const identity = await requireAuth(ctx);
+    const userId = identity.subject;
+
+    const connection = await ctx.db.get(args.connectionId);
+    if (!connection || connection.userId !== userId) {
+      throw new Error("Connection not found");
+    }
+
     const now = Date.now();
     await ctx.db.patch(args.connectionId, {
       status: "disconnected",
@@ -94,6 +99,7 @@ export const disconnect = mutation({
 
 // ─── Get connection statuses for current user ───────
 export const getConnectionStatus = query({
+  args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];

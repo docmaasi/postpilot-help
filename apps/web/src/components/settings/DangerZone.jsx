@@ -41,7 +41,13 @@ export function NotificationsAndDanger({ emailNotifs, onNotifsChange }) {
         <p className="mb-3 text-sm text-muted-foreground">
           Download a copy of all your posts, videos, and settings.
         </p>
-        <button className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">
+        <button
+          onClick={() => {
+            // TODO: Wire to real data export endpoint
+            console.log('Data export requested');
+          }}
+          className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+        >
           Export All Data
         </button>
       </div>
@@ -58,7 +64,13 @@ export function NotificationsAndDanger({ emailNotifs, onNotifsChange }) {
               This will permanently delete your account and all data. This cannot be undone.
             </p>
             <div className="flex gap-2">
-              <button className="rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground">
+              <button
+                onClick={() => {
+                  // TODO: Wire to real account deletion endpoint
+                  console.log('Account deletion confirmed');
+                }}
+                className="rounded-lg bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground"
+              >
                 Confirm Delete
               </button>
               <button

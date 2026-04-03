@@ -4,15 +4,16 @@ import { action, internalAction } from "../_generated/server";
 import { v } from "convex/values";
 import { internal } from "../_generated/api";
 import { PLATFORM_CONFIG } from "./platformConfig";
+import crypto from "crypto";
 
 // ─── Generate a random state token ──────────────────
 function generateState(): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < 32; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+  return crypto.randomBytes(32).toString("base64url");
+}
+
+// ─── Generate a PKCE code verifier (43-128 chars) ───
+function generateCodeVerifier(): string {
+  return crypto.randomBytes(32).toString("base64url");
 }
 
 // ─── Initiate OAuth ─────────────────────────────────
@@ -21,7 +22,10 @@ export const initiateOAuth = action({
     platform: v.string(),
     redirectUri: v.string(),
   },
-  handler: async (_ctx, args) => {
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+
     const config = PLATFORM_CONFIG[args.platform];
     if (!config) {
       throw new Error(`Unsupported platform: ${args.platform}`);
@@ -33,17 +37,19 @@ export const initiateOAuth = action({
     }
 
     const state = generateState();
+    // Encode platform:userId:randomState so the HTTP callback can extract userId
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: args.redirectUri,
       response_type: "code",
       scope: config.scopes,
-      state: `${args.platform}:${state}`,
+      state: `${args.platform}:${identity.subject}:${state}`,
     });
 
-    // Twitter uses PKCE — add code_challenge
+    // Twitter uses PKCE — add code_challenge (plain method)
+    const codeVerifier = generateCodeVerifier();
     if (args.platform === "twitter") {
-      params.set("code_challenge", "challenge");
+      params.set("code_challenge", codeVerifier);
       params.set("code_challenge_method", "plain");
     }
 
@@ -54,65 +60,108 @@ export const initiateOAuth = action({
     }
 
     const authorizationUrl = `${config.authUrl}?${params.toString()}`;
-    return { authorizationUrl, state };
+    return {
+      authorizationUrl,
+      state,
+      codeVerifier: args.platform === "twitter" ? codeVerifier : undefined,
+    };
   },
 });
 
-// ─── Exchange code for tokens ───────────────────────
+// ─── Shared token exchange logic ────────────────────
+async function exchangeCodeForTokens(
+  ctx: any,
+  args: {
+    userId: string;
+    platform: string;
+    code: string;
+    redirectUri: string;
+    codeVerifier?: string;
+  },
+) {
+  const config = PLATFORM_CONFIG[args.platform];
+  if (!config) {
+    throw new Error(`Unsupported platform: ${args.platform}`);
+  }
+
+  const clientId = process.env[config.clientIdEnv];
+  const clientSecret = process.env[config.clientSecretEnv];
+  if (!clientId || !clientSecret) {
+    throw new Error(`Missing OAuth credentials for ${args.platform}`);
+  }
+
+  const body = new URLSearchParams({
+    grant_type: "authorization_code",
+    code: args.code,
+    redirect_uri: args.redirectUri,
+    client_id: clientId,
+    client_secret: clientSecret,
+  });
+
+  // Twitter uses PKCE code_verifier
+  if (args.platform === "twitter" && args.codeVerifier) {
+    body.set("code_verifier", args.codeVerifier);
+  }
+
+  const response = await fetch(config.tokenUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString(),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Token exchange failed: ${errorText}`);
+  }
+
+  const tokens = await response.json();
+
+  // Store connection via internal mutation (pass userId explicitly)
+  await ctx.runMutation(internal.publishing.oauthHelpers.storeConnection, {
+    userId: args.userId,
+    platform: args.platform,
+    accessToken: tokens.access_token ?? "",
+    refreshToken: tokens.refresh_token ?? "",
+    expiresIn: tokens.expires_in ?? 3600,
+  });
+
+  return { success: true };
+}
+
+// ─── Exchange code for tokens (client-side, authenticated) ──
 export const handleCallback = action({
   args: {
     platform: v.string(),
     code: v.string(),
     state: v.string(),
     redirectUri: v.string(),
+    codeVerifier: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const config = PLATFORM_CONFIG[args.platform];
-    if (!config) {
-      throw new Error(`Unsupported platform: ${args.platform}`);
-    }
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
 
-    const clientId = process.env[config.clientIdEnv];
-    const clientSecret = process.env[config.clientSecretEnv];
-    if (!clientId || !clientSecret) {
-      throw new Error(`Missing OAuth credentials for ${args.platform}`);
-    }
-
-    const body = new URLSearchParams({
-      grant_type: "authorization_code",
-      code: args.code,
-      redirect_uri: args.redirectUri,
-      client_id: clientId,
-      client_secret: clientSecret,
-    });
-
-    // Twitter uses PKCE code_verifier
-    if (args.platform === "twitter") {
-      body.set("code_verifier", "challenge");
-    }
-
-    const response = await fetch(config.tokenUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: body.toString(),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Token exchange failed: ${errorText}`);
-    }
-
-    const tokens = await response.json();
-
-    // Store connection via internal mutation
-    await ctx.runMutation(internal.publishing.oauthHelpers.storeConnection, {
+    return exchangeCodeForTokens(ctx, {
+      userId: identity.subject,
       platform: args.platform,
-      accessToken: tokens.access_token ?? "",
-      refreshToken: tokens.refresh_token ?? "",
-      expiresIn: tokens.expires_in ?? 3600,
+      code: args.code,
+      redirectUri: args.redirectUri,
+      codeVerifier: args.codeVerifier,
     });
+  },
+});
 
-    return { success: true };
+// ─── Exchange code for tokens (server-side HTTP callback, no JWT) ──
+export const handleCallbackInternal = internalAction({
+  args: {
+    userId: v.string(),
+    platform: v.string(),
+    code: v.string(),
+    redirectUri: v.string(),
+    codeVerifier: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    return exchangeCodeForTokens(ctx, args);
   },
 });
 

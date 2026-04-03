@@ -49,6 +49,14 @@ export const update = mutation({
     parentId: v.optional(v.id("collections")),
   },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const collection = await ctx.db.get(args.id);
+    if (!collection || collection.userId !== getUserId(identity)) {
+      throw new Error("Collection not found");
+    }
+
     const { id, ...updates } = args;
     await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
   },
@@ -57,6 +65,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("collections") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const collection = await ctx.db.get(args.id);
+    if (!collection || collection.userId !== getUserId(identity)) {
+      throw new Error("Collection not found");
+    }
+
     await ctx.db.delete(args.id);
   },
 });

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Users, BarChart3, Loader2 } from 'lucide-react';
 import { useAction } from 'convex/react';
-import { api } from '../../../../../convex/_generated/api';
+import { api } from 'convex/_generated/api';
 
 const PACKS = [
   {
@@ -65,7 +65,7 @@ function PackCard({ pack, index }) {
     try {
       const url = await createCheckout({
         packType: key,
-        successUrl: `${window.location.origin}/billing?pack_success=true`,
+        successUrl: `${window.location.origin}/app/billing?pack_success=true`,
         cancelUrl: `${window.location.origin}/pricing`,
       });
       if (url) window.location.href = url;

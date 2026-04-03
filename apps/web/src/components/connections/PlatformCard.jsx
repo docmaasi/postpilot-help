@@ -27,7 +27,7 @@ const STATUS_CONFIG = {
 /**
  * Single platform connection card with status and connect/disconnect button.
  */
-export function PlatformCard({ platform, index, onConnect, isConnecting }) {
+export function PlatformCard({ platform, index, onConnect, onDisconnect, isConnecting }) {
   const status = platform.status ?? 'not_connected';
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.not_connected;
   const StatusIcon = cfg.icon;
@@ -80,7 +80,11 @@ export function PlatformCard({ platform, index, onConnect, isConnecting }) {
         )}
 
         <button
-          onClick={() => onConnect(platform.key)}
+          onClick={() =>
+            isConnected
+              ? onDisconnect(platform.connectionId)
+              : onConnect(platform.key)
+          }
           disabled={isConnecting}
           className={`mt-4 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-60 ${
             isConnected

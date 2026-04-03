@@ -1,5 +1,5 @@
 import { httpAction } from "../../_generated/server";
-import { api } from "../../_generated/api";
+import { internal } from "../../_generated/api";
 
 /**
  * OAuth callback handler.
@@ -27,22 +27,29 @@ export const oauthCallbackHandler = httpAction(async (ctx, request) => {
     return Response.redirect(redirectUrl, 302);
   }
 
-  // Parse platform from state (format: "platform:randomState")
-  const colonIndex = stateParam.indexOf(":");
-  if (colonIndex === -1) {
+  // Parse state (format: "platform:userId:randomState")
+  const parts = stateParam.split(":");
+  if (parts.length < 3) {
     const redirectUrl = `${appUrl}/connections?error=invalid_state`;
     return Response.redirect(redirectUrl, 302);
   }
 
-  const platform = stateParam.substring(0, colonIndex);
+  const platform = parts[0];
+  const userId = parts[1];
   const convexUrl = process.env.CONVEX_SITE_URL ?? "";
   const redirectUri = `${convexUrl}/oauth/callback`;
 
+  // For Twitter (PKCE), redirect to client with code so it can use stored codeVerifier
+  if (platform === "twitter") {
+    const clientCallbackUrl = `${appUrl}/connections?oauth_code=${encodeURIComponent(code)}&platform=${platform}&state=${encodeURIComponent(stateParam)}`;
+    return Response.redirect(clientCallbackUrl, 302);
+  }
+
   try {
-    await ctx.runAction(api.publishing.oauth.handleCallback, {
+    await ctx.runAction(internal.publishing.oauth.handleCallbackInternal, {
+      userId,
       platform,
       code,
-      state: stateParam,
       redirectUri,
     });
 

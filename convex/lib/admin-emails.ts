@@ -1,13 +1,14 @@
 /**
  * Admin emails that get full Pro access without a subscription.
- * Add emails here to grant automatic Pro-level access.
+ * Set ADMIN_EMAILS env var as a comma-separated list of emails.
  */
-export const ADMIN_EMAILS: string[] = [
-  "docmaasi2@gmail.com",
-  "lujefabricante@gmail.com",
-];
+function getAdminEmails(): string[] {
+  const raw = process.env.ADMIN_EMAILS ?? "";
+  if (!raw) return [];
+  return raw.split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+}
 
 export function isAdminEmail(email: string | undefined | null): boolean {
   if (!email) return false;
-  return ADMIN_EMAILS.includes(email.toLowerCase());
+  return getAdminEmails().includes(email.toLowerCase());
 }

@@ -54,7 +54,7 @@ export default function Circles() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <InviteForm onClose={() => setShowInvite(false)} />
+            <InviteForm workspaceId={workspace?._id} onClose={() => setShowInvite(false)} />
           </motion.div>
         )}
       </AnimatePresence>

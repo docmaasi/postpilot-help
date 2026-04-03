@@ -58,7 +58,12 @@ export const list = query({
 export const getById = query({
   args: { id: v.id("posts") },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.id);
+    const identity = await getAuthUser(ctx);
+    if (!identity) return null;
+
+    const post = await ctx.db.get(args.id);
+    if (!post || post.userId !== getUserId(identity)) return null;
+    return post;
   },
 });
 
@@ -116,6 +121,14 @@ export const update = mutation({
     isFavorite: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const post = await ctx.db.get(args.id);
+    if (!post || post.userId !== getUserId(identity)) {
+      throw new Error("Post not found");
+    }
+
     const { id, ...updates } = args;
     await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
   },
@@ -124,8 +137,13 @@ export const update = mutation({
 export const duplicate = mutation({
   args: { id: v.id("posts") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
     const original = await ctx.db.get(args.id);
-    if (!original) throw new Error("Post not found");
+    if (!original || original.userId !== getUserId(identity)) {
+      throw new Error("Post not found");
+    }
 
     const now = Date.now();
     const { _id, _creationTime, ...rest } = original;
@@ -145,6 +163,14 @@ export const duplicate = mutation({
 export const remove = mutation({
   args: { id: v.id("posts") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const post = await ctx.db.get(args.id);
+    if (!post || post.userId !== getUserId(identity)) {
+      throw new Error("Post not found");
+    }
+
     await ctx.db.patch(args.id, {
       status: "archived",
       updatedAt: Date.now(),

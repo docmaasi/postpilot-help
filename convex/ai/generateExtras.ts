@@ -40,7 +40,7 @@ export const suggestCTAs = action({
         prompt: args.content,
         response: text,
         type: "cta",
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-haiku-4-5",
         tokensUsed,
       });
       return { ctas };
@@ -79,7 +79,7 @@ export const generateMultipleTones = action({
             response: results[tone],
             type: "rewrite",
             tone,
-            model: "claude-haiku-4-5-20251001",
+            model: "claude-haiku-4-5",
             tokensUsed: 0,
           });
         }

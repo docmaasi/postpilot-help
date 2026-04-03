@@ -65,6 +65,14 @@ export const update = mutation({
     )),
   },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const campaign = await ctx.db.get(args.id);
+    if (!campaign || campaign.userId !== getUserId(identity)) {
+      throw new Error("Campaign not found");
+    }
+
     const { id, ...updates } = args;
     await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
   },
@@ -73,6 +81,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("campaigns") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const campaign = await ctx.db.get(args.id);
+    if (!campaign || campaign.userId !== getUserId(identity)) {
+      throw new Error("Campaign not found");
+    }
+
     await ctx.db.patch(args.id, {
       status: "archived",
       updatedAt: Date.now(),

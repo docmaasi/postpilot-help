@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, X, Loader2 } from 'lucide-react';
 import { useAction, useConvexAuth } from 'convex/react';
-import { api } from '../../../../../convex/_generated/api';
+import { api } from 'convex/_generated/api';
 import { cn } from '@postpilot/lib';
 
 const PLANS = [
@@ -125,12 +125,7 @@ function PlanCard({ plan, index }) {
   const { isAuthenticated } = useConvexAuth();
   const navigate = useNavigate();
 
-  let createCheckout = null;
-  try {
-    createCheckout = useAction(api.payments.stripe.createCheckoutSession);
-  } catch {
-    // Action not available when not authenticated — that's fine
-  }
+  const createCheckout = useAction(api.payments.stripe.createCheckoutSession);
 
   async function handleUpgrade() {
     if (key === 'free') {

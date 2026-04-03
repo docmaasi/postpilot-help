@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { Package, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export function PackBalances({ packs }) {
+  const navigate = useNavigate();
+
   if (!packs || packs.length === 0) return null;
 
   return (
@@ -28,7 +31,10 @@ export function PackBalances({ packs }) {
                 </p>
               </div>
             </div>
-            <button className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors">
+            <button
+              onClick={() => navigate('/pricing')}
+              className="flex items-center gap-1.5 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
+            >
               <ShoppingCart className="h-3 w-3" />
               Buy More
             </button>

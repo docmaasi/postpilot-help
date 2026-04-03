@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Pencil, Archive, PlusCircle, StickyNote } from 'lucide-react';
@@ -13,6 +13,21 @@ export default function VideoDetail() {
   const video = useVideo(id);
   const updateVideo = useUpdateVideo();
   const [notes, setNotes] = useState('');
+  const [notesLoaded, setNotesLoaded] = useState(false);
+
+  // Load notes from video once available (must be before early returns)
+  useEffect(() => {
+    if (video && !notesLoaded) {
+      setNotes(video.notes ?? '');
+      setNotesLoaded(true);
+    }
+  }, [video, notesLoaded]);
+
+  const saveNotes = useCallback(async (value) => {
+    if (!video?._id) return;
+    setNotes(value);
+    await updateVideo({ id: video._id, notes: value });
+  }, [updateVideo, video?._id]);
 
   if (video === undefined) {
     return <LoadingSkeleton />;
@@ -23,6 +38,11 @@ export default function VideoDetail() {
 
   async function toggleFavorite() {
     await updateVideo({ id: video._id, isFavorite: !video.isFavorite });
+  }
+
+  async function handleArchive() {
+    await updateVideo({ id: video._id, isArchived: true });
+    navigate('/app/videos');
   }
 
   return (
@@ -41,8 +61,8 @@ export default function VideoDetail() {
       {/* Action buttons */}
       <div className="flex flex-wrap gap-3">
         <ActionBtn icon={PlusCircle} label="Create Post" onClick={() => navigate(`/app/posts/new?videoId=${id}`)} />
-        <ActionBtn icon={Pencil} label="Edit Details" />
-        <ActionBtn icon={Archive} label="Archive" variant="muted" />
+        <ActionBtn icon={Pencil} label="Edit Details" onClick={() => navigate(`/app/videos/${id}/edit`)} />
+        <ActionBtn icon={Archive} label="Archive" variant="muted" onClick={handleArchive} />
       </div>
 
       <RepurposeSection videoId={id} />
@@ -62,6 +82,7 @@ export default function VideoDetail() {
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
+          onBlur={(e) => saveNotes(e.target.value)}
           placeholder="Add notes about this video..."
           rows={4}
           className="input-field resize-none"

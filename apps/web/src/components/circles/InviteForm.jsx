@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Send, X } from 'lucide-react';
+import { Send, X, Loader2 } from 'lucide-react';
+import { useMutation } from 'convex/react';
+import { api } from 'convex/_generated/api';
 
 const ROLES = [
   { value: 'viewer', label: 'Viewer' },
@@ -8,16 +10,30 @@ const ROLES = [
   { value: 'publisher', label: 'Publisher' },
 ];
 
-export function InviteForm({ onClose }) {
+export function InviteForm({ workspaceId, onClose }) {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('contributor');
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const addMember = useMutation(api.workspaces.addMember);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Will wire to Convex later
-    alert(`Invite sent to ${email} as ${role}`);
-    setEmail('');
-    onClose();
+    if (!workspaceId) {
+      setError('No workspace found. Please create a Circle first.');
+      return;
+    }
+    setSending(true);
+    setError('');
+    try {
+      await addMember({ workspaceId, email, role });
+      setEmail('');
+      onClose();
+    } catch (err) {
+      setError(err.message || 'Failed to send invite');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -58,12 +74,16 @@ export function InviteForm({ onClose }) {
         </select>
         <button
           type="submit"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+          disabled={sending}
+          className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
-          <Send className="h-4 w-4" />
-          Send Invite
+          {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          {sending ? 'Sending...' : 'Send Invite'}
         </button>
       </div>
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
     </form>
   );
 }

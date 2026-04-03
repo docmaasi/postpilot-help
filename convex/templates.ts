@@ -70,6 +70,14 @@ export const update = mutation({
     isDefault: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const template = await ctx.db.get(args.id);
+    if (!template || template.userId !== getUserId(identity)) {
+      throw new Error("Template not found");
+    }
+
     const { id, ...updates } = args;
     await ctx.db.patch(id, { ...updates, updatedAt: Date.now() });
   },
@@ -78,6 +86,14 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("templates") },
   handler: async (ctx, args) => {
+    const identity = await getAuthUser(ctx);
+    if (!identity) throw new Error("Not authenticated");
+
+    const template = await ctx.db.get(args.id);
+    if (!template || template.userId !== getUserId(identity)) {
+      throw new Error("Template not found");
+    }
+
     await ctx.db.delete(args.id);
   },
 });

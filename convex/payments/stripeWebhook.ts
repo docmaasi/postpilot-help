@@ -80,7 +80,8 @@ async function handleSubUpdate(ctx: any, event: Stripe.Event) {
   const status = sub.status === "active" ? "active"
     : sub.status === "past_due" ? "past_due"
     : sub.status === "canceled" ? "canceled"
-    : "active";
+    : sub.status === "trialing" ? "trialing"
+    : "past_due";
 
   await ctx.runMutation(internal.payments.subscriptions.updatePlan, {
     userId,
@@ -101,22 +102,27 @@ async function handleSubDeleted(ctx: any, event: Stripe.Event) {
     stripeSubscriptionId: sub.id,
     plan: "free",
     status: "canceled",
-    currentPeriodEnd: Date.now(),
+    currentPeriodEnd: sub.current_period_end
+      ? sub.current_period_end * 1000
+      : Date.now(),
   });
 }
 
 async function handlePaymentFailed(ctx: any, event: Stripe.Event) {
   const invoice = event.data.object as Stripe.Invoice;
-  const sub = invoice.subscription;
-  if (!sub || typeof sub !== "string") return;
+  const subId = invoice.subscription;
+  if (!subId || typeof subId !== "string") return;
 
-  const userId = invoice.metadata?.convexUserId;
+  // Invoice metadata may not have convexUserId — retrieve from the subscription
+  const stripe = getStripe();
+  const sub = await stripe.subscriptions.retrieve(subId);
+  const userId = sub.metadata?.convexUserId;
   if (!userId) return;
 
   await ctx.runMutation(internal.payments.subscriptions.updatePlan, {
     userId,
-    stripeSubscriptionId: sub,
-    plan: invoice.metadata?.plan ?? "creator",
+    stripeSubscriptionId: subId,
+    plan: sub.metadata?.plan ?? "creator",
     status: "past_due",
     currentPeriodEnd: Date.now(),
   });

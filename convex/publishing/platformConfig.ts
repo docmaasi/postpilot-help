@@ -45,7 +45,7 @@ export const PLATFORM_CONFIG: Record<string, {
     clientIdEnv: "TIKTOK_CLIENT_KEY",
     clientSecretEnv: "TIKTOK_CLIENT_SECRET",
   },
-  youtube: {
+  youtube_community: {
     authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     tokenUrl: "https://oauth2.googleapis.com/token",
     scopes: "https://www.googleapis.com/auth/youtube.force-ssl",

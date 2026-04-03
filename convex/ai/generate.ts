@@ -28,7 +28,7 @@ export const summarizeVideo = action({
         prompt: userMsg,
         response: text,
         type: "caption",
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-haiku-4-5",
         tokensUsed,
       });
       return { caption: text };
@@ -66,7 +66,7 @@ export const rewriteForPlatform = action({
         response: text,
         type: "rewrite",
         tone: tone as any,
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-haiku-4-5",
         tokensUsed,
       });
       return { rewritten: text };
@@ -106,7 +106,7 @@ export const suggestHashtags = action({
         prompt: args.content,
         response: text,
         type: "hashtags",
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-haiku-4-5",
         tokensUsed,
       });
       return { hashtags };

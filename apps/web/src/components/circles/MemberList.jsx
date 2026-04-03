@@ -62,14 +62,18 @@ function Section({ title, members }) {
       >
         {members.map((member) => (
           <motion.div
-            key={member.id}
+            key={member._id}
             variants={item}
             className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 glow-card"
           >
-            <Avatar name={member.name} />
+            <Avatar name={member.email} />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">{member.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{member.email}</p>
+              <p className="text-sm font-semibold truncate">{member.email}</p>
+              <p className="text-xs text-muted-foreground truncate">
+                {member.joinedAt
+                  ? `Joined ${new Date(member.joinedAt).toLocaleDateString()}`
+                  : `Invited ${new Date(member.invitedAt).toLocaleDateString()}`}
+              </p>
             </div>
             <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase ${ROLE_COLORS[member.role]}`}>
               {member.role}
@@ -88,11 +92,14 @@ function Section({ title, members }) {
 }
 
 function Avatar({ name }) {
-  const initials = name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2);
+  const display = name || '?';
+  const initials = display.includes('@')
+    ? display.split('@')[0].slice(0, 2).toUpperCase()
+    : display
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2);
 
   return (
     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
