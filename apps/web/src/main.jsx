@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import * as Sentry from '@sentry/react';
 import { ClerkProvider, useAuth } from '@clerk/clerk-react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexReactClient } from 'convex/react';
@@ -9,6 +10,17 @@ import { Toaster } from '@postpilot/ui/sonner';
 import ErrorBoundary from '@postpilot/ui/ErrorBoundary';
 import { App } from './App.jsx';
 import './index.css';
+
+Sentry.init({
+  dsn: 'https://22d375f2b9ddd390e484bfd13cf03305@o4511160331075584.ingest.us.sentry.io/4511160359452672',
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
+  tracesSampleRate: 1.0,
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
 
